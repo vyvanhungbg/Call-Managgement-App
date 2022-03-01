@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <dimen name="small_padding">5dp</dimen>
+    <dimen name="medium_padding">12dp</dimen>
+    <dimen name="large_padding">20dp</dimen>
+
+
+    <dimen name="small_font">13sp</dimen>
+    <dimen name="medium_font">16sp</dimen>
+    <dimen name="large_font">20sp</dimen>
+
+
+    <dimen name="small_margin">5dp</dimen>
+    <dimen name="medium_margin">12dp</dimen>
+    <dimen name="large_margin">20dp</dimen>
+
+</resources>

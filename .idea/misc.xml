@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="../../../../../../../layout/custom_preview.xml" value="0.19895833333333332" />
+        <entry key="app/src/main/res/drawable/custom_button_record.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable/custom_seach_view.xml" value="0.1415" />
+        <entry key="app/src/main/res/drawable/custom_time_line_rounded.xml" value="0.1415" />
+        <entry key="app/src/main/res/drawable/custom_time_line_selected.xml" value="0.1415" />
+        <entry key="app/src/main/res/drawable/ic_baseline_mic_24.xml" value="0.1415" />
+        <entry key="app/src/main/res/drawable/ic_baseline_mic_off_24.xml" value="0.1415" />
+        <entry key="app/src/main/res/layout/activity_main.xml" value="0.17239583333333333" />
+        <entry key="app/src/main/res/layout/fragment_all_call.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_call_statistics.xml" value="0.17239583333333333" />
+        <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2" />
+        <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.17239583333333333" />
+        <entry key="app/src/main/res/menu/bottom_navigation_bar.xml" value="0.33541666666666664" />
+      </map>
+    </option>
+  </component>
+  <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="Android Studio default JDK" project-jdk-type="JavaSDK">
+    <output url="file://$PROJECT_DIR$/build/classes" />
+  </component>
+  <component name="ProjectType">
+    <option name="id" value="Android" />
+  </component>
+</project>
