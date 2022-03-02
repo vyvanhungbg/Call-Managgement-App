@@ -25,4 +25,31 @@
     <string name="title_textview_day_of_week_6">T6</string>
     <string name="title_textview_day_of_week_7">T7</string>
     <string name="title_textview_day_of_week_cn">CN</string>
+
+
+    <string name="recorder_header">Recorder</string>
+
+    <string name="preferred_audio_source">Preferred audio source</string>
+    <string name="preferred_output_format">Preferred output format</string>
+    <string name="preferred_audio_encoder">Preferred audio encoder</string>
+
+    <string name="vibrate">Vibrate</string>
+    <string name="vibrate_description">On start &amp; stop recording.</string>
+
+    <string name="turn_on_speaker">Turn on speaker</string>
+    <string name="turn_on_speaker_description"></string>
+
+    <string name="max_up_volume">Max up volume</string>
+    <string name="max_up_volume_description">This will improve audio quality.</string>
+    <string name="records_output_location_title">Records output location</string>
+
+    <!-- Service -->
+    <string name="service">Service</string>
+    <string name="additional_service">Additional service</string>
+    <!-- - Service -->
+
+    <!-- Runtime permissions -->
+    <string name="runtime_permissions_not_granted_title">Runtime permissions not granted</string>
+    <string name="runtime_permissions_not_granted_message">Some of the requested runtime permissions are not granted. Consider granting them manually as soon as possible. Otherwise application performance may misbehave.</string>
+    <!-- - Runtime permissions -->
 </resources>

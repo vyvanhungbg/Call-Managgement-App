@@ -3,7 +3,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <data>
-        <import type="com.franky.callmanagement.DayUtil"/>
+        <import type="com.franky.callmanagement.utils.DayUtil"/>
         <variable
             name="daySelected"
             type="Boolean" />
