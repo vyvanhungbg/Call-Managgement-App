@@ -10,12 +10,13 @@ import android.view.ViewGroup;
 
 import com.franky.callmanagement.R;
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Use the {@link CallStatisticsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CallStatisticsFragment extends Fragment {
+public class CallStatisticsFragment extends Fragment  {
 
 
     public static CallStatisticsFragment newInstance() {
@@ -38,6 +39,12 @@ public class CallStatisticsFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
+
+
+
         return inflater.inflate(R.layout.fragment_call_statistics, container, false);
     }
+
+
+
 }

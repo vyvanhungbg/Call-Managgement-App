@@ -17,7 +17,8 @@ public class DayUtil {
     public static void setIsDaySelected(View view ,int day) {
          Calendar calendar = Calendar.getInstance();
          int nowDay = calendar.get(Calendar.DAY_OF_WEEK);
-        Log.e("Noew day",nowDay+"");
-        view.setBackground(nowDay==day ? ContextCompat.getDrawable(view.getContext(),R.drawable.custom_time_line_selected) : null);
+         Log.e("Now day",nowDay+"");
+         view.setBackground(nowDay==day ? ContextCompat.getDrawable(view.getContext(),R.drawable.custom_time_line_selected) : null);
+
     }
 }
