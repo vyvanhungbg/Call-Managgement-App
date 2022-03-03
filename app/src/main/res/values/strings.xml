@@ -52,4 +52,16 @@
     <string name="runtime_permissions_not_granted_title">Runtime permissions not granted</string>
     <string name="runtime_permissions_not_granted_message">Some of the requested runtime permissions are not granted. Consider granting them manually as soon as possible. Otherwise application performance may misbehave.</string>
     <!-- - Runtime permissions -->
+
+
+    <string name="unknown_number">Unknown</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+
+    <string name="incoming">Incoming</string>
+    <string name="outgoing">Outgoing</string>
+
+    <string name="today">Today</string>
+    <string name="yesterday">Yesterday</string>
+    <string name="older">Older</string>
 </resources>

@@ -5,12 +5,15 @@ import static com.franky.callmanagement.utils.LogUtil.LogE;
 import static com.franky.callmanagement.utils.LogUtil.LogI;
 
 import android.Manifest;
+import android.app.Notification;
 import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.app.Service;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.drawable.Icon;
 import android.media.AudioManager;
 import android.media.MediaRecorder;
 import android.os.Build;
@@ -22,6 +25,7 @@ import android.telephony.TelephonyManager;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
+import androidx.annotation.RequiresPermission;
 import androidx.core.content.ContextCompat;
 
 import com.franky.callmanagement.R;
@@ -52,6 +56,7 @@ public class CallRecorderService extends Service {
     private boolean isIncoming = false;
     private boolean isOutgoing = false;
 
+    NotificationManager notificationManager;
     private String phoneStateIncomingNumber = null;
     private MediaRecorder mediaRecorder = null;
     private boolean vibrate = true, turnOnSpeaker = false, maxUpVolume = true;
@@ -60,6 +65,108 @@ public class CallRecorderService extends Service {
     private CallObject outgoingCallObject = null;
     private boolean favorite = false;
 
+    @Override
+    public void onCreate() {
+        super.onCreate();
+        LogD (TAG, "Service create");
+        isServiceRunning = true;
+        try {
+            realm = Realm.getDefaultInstance ();
+        } catch (Exception e) {
+            LogE (TAG, e.getMessage ());
+            LogE (TAG, e.toString ());
+            e.printStackTrace ();
+        }
+        try {
+            notificationManager = (NotificationManager) getSystemService (Context.NOTIFICATION_SERVICE);
+        } catch (Exception e) {
+            LogE (TAG, e.getMessage ());
+            LogE (TAG, e.toString ());
+            e.printStackTrace ();
+        }
+        if (notificationManager != null) {
+            CharSequence contentTitle = "Recording...", contentText = "Call recording is currently in progress.";
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                try {
+                    notificationChannel = new NotificationChannel (getString (R.string.service) + "-" + FOREGROUND_NOTIFICATION_ID, getString (R.string.service), NotificationManager.IMPORTANCE_NONE);
+                } catch (Exception e) {
+                    LogE (TAG, e.getMessage ());
+                    LogE (TAG, e.toString ());
+                    e.printStackTrace ();
+                }
+                if (notificationChannel != null) {
+                    try {
+                        notificationManager.createNotificationChannel (notificationChannel);
+                    } catch (Exception e) {
+                        LogE (TAG, e.getMessage ());
+                        LogE (TAG, e.toString ());
+                        e.printStackTrace ();
+                    }
+                    Icon logoIcon = Icon.createWithResource (this, R.drawable.ic_stat_name);
+                    Icon largeIcon = Icon.createWithResource (this, R.mipmap.ic_launcher);
+                    try {
+                        startForeground (FOREGROUND_NOTIFICATION_ID, new Notification.Builder (this, getString (R.string.service) + "-" + FOREGROUND_NOTIFICATION_ID)
+                                .setSmallIcon (logoIcon)
+                                .setLargeIcon (largeIcon)
+                                .setContentTitle (contentTitle)
+                                .setContentText (contentText)
+                                .build ());
+                    } catch (Exception e) {
+                        LogE (TAG, e.getMessage ());
+                        LogE (TAG, e.toString ());
+                        e.printStackTrace ();
+                    }
+                }
+            } else {
+                Notification.Builder builder = new Notification.Builder (this);
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                    Icon logoIcon = Icon.createWithResource (this, R.drawable.ic_stat_name);
+                    Icon largeIcon = Icon.createWithResource (this, R.mipmap.ic_launcher);
+                    builder.setSmallIcon (logoIcon);
+                    builder.setLargeIcon (largeIcon);
+                } else {
+                    builder.setSmallIcon (R.drawable.ic_stat_name);
+                }
+                builder.setContentTitle (contentTitle);
+                builder.setContentText (contentText);
+                builder.setOngoing (true);
+                try {
+                    notificationManager.notify (FOREGROUND_NOTIFICATION_ID, builder.build ());
+                } catch (Exception e) {
+                    LogE (TAG, e.getMessage ());
+                    LogE (TAG, e.toString ());
+                    e.printStackTrace ();
+                }
+            }
+        }
+        if (ContextCompat.checkSelfPermission (this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                telephonyManager = (TelephonyManager) getSystemService (Context.TELEPHONY_SERVICE);
+            } catch (Exception e) {
+                LogE (TAG, e.getMessage ());
+                LogE (TAG, e.toString ());
+                e.printStackTrace ();
+            }
+        }
+        if (ContextCompat.checkSelfPermission (this, Manifest.permission.VIBRATE) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                vibrator = (Vibrator) getSystemService (Context.VIBRATOR_SERVICE);
+            } catch (Exception e) {
+                LogE (TAG, e.getMessage ());
+                LogE (TAG, e.toString ());
+                e.printStackTrace ();
+            }
+        }
+        if (ContextCompat.checkSelfPermission (this, Manifest.permission.MODIFY_AUDIO_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                audioManager = (AudioManager) getSystemService (Context.AUDIO_SERVICE);
+            } catch (Exception e) {
+                LogE (TAG, e.getMessage ());
+                LogE (TAG, e.toString ());
+                e.printStackTrace ();
+            }
+        }
+    }
 
     @Nullable
     @Override
@@ -70,7 +177,7 @@ public class CallRecorderService extends Service {
     @Override
     public int onStartCommand(Intent intent, int flags, int startId) {
          super.onStartCommand(intent, flags, startId);
-        LogD (TAG, "Service start command");
+        LogE (TAG, "Service start command");
         if(intent != null){
             // Lấy cài đặt mặc định
             try {
@@ -82,12 +189,12 @@ public class CallRecorderService extends Service {
 
             if (intent.hasExtra (AppConstants.INTENT_ACTION_INCOMING_CALL)) {
                 isIncoming = intent.getBooleanExtra (AppConstants.INTENT_ACTION_INCOMING_CALL, false);
-                LogD (TAG, "mIsIncoming " + isIncoming);
+                LogE (TAG, "mIsIncoming " + isIncoming);
             }
 
             if (intent.hasExtra (AppConstants.INTENT_ACTION_OUTGOING_CALL)) {
                 isOutgoing = intent.getBooleanExtra (AppConstants.INTENT_ACTION_OUTGOING_CALL, false);
-                LogD (TAG, "mIsOutgoing " + isOutgoing);
+                LogE (TAG, "mIsOutgoing " + isOutgoing);
             }
 
 
@@ -98,7 +205,7 @@ public class CallRecorderService extends Service {
                 // luuw trữ thông tin
                 if (intent.hasExtra (TelephonyManager.EXTRA_INCOMING_NUMBER)) {
                     phoneStateIncomingNumber = intent.getStringExtra (TelephonyManager.EXTRA_INCOMING_NUMBER);
-                    LogD (TAG, "phoneStateIncomingNumber " + phoneStateIncomingNumber);
+                    LogE (TAG, "phoneStateIncomingNumber " + phoneStateIncomingNumber);
 
                     Realm realmf = null;
                     try {
@@ -126,7 +233,7 @@ public class CallRecorderService extends Service {
                     }
 
                     if (!phoneStateIncomingNumber.trim ().isEmpty ()) {
-                        LogI (TAG, "Phone state incoming number: " + phoneStateIncomingNumber);
+                        LogE (TAG, "Phone state incoming number: " + phoneStateIncomingNumber);
                     }
                 }
             }
@@ -164,33 +271,29 @@ public class CallRecorderService extends Service {
         return START_STICKY_COMPATIBILITY;
     }
 
-    public void getSettingBySharedPrefs(@Nullable Integer audioSource, @Nullable Integer outputFormat, @Nullable Integer audioEncoder){
-        // lấy các cài đặt mặc đinh trong app
-        if (audioSource == null) {
-            audioSource = Integer.valueOf (sharedPreferences.getString (AppConstants.FM_SP_AUDIO_SOURCE,
-                    String.valueOf (CallRecorderConfig.CALL_RECORDER_DEFAULT_AUDIO_SOURCE)));
-        }
-        if (outputFormat == null) {
-            outputFormat = Integer.valueOf (sharedPreferences.getString (AppConstants.FM_SP_OUTPUT_FORMAT,
-                    String.valueOf (CallRecorderConfig.CALL_RECORDER_DEFAULT_OUTPUT_FORMAT)));
-        }
-        if (audioEncoder == null) {
-            audioEncoder = Integer.valueOf (sharedPreferences.getString (AppConstants.FM_SP_AUDIO_ENCODER,
-                    String.valueOf (CallRecorderConfig.CALL_RECORDER_DEFAULT_AUDIO_ENCODER)));
-        }
-        vibrate = sharedPreferences.getBoolean (AppConstants.FM_SP_VIBRATE, true);
-        turnOnSpeaker = sharedPreferences.getBoolean (AppConstants.FM_SP_TURN_ON_SPEAKER, false);
-        maxUpVolume = sharedPreferences.getBoolean (AppConstants.FM_SP_MAX_UP_VOLUME, true);
-    }
 
-
+    @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     public void beginRecorder (@Nullable Integer audioSource, @Nullable Integer outputFormat, @Nullable Integer audioEncoder) {
         if (mediaRecorder != null) {
             return;
         }
         long beginTimestamp = new Date().getTime ();
         if (sharedPreferences != null) {
-            getSettingBySharedPrefs(audioSource, outputFormat, audioEncoder);
+            if (audioSource == null) {
+                audioSource = Integer.valueOf (sharedPreferences.getString (AppConstants.FM_SP_AUDIO_SOURCE,
+                        String.valueOf (CallRecorderConfig.CALL_RECORDER_DEFAULT_AUDIO_SOURCE)));
+            }
+            if (outputFormat == null) {
+                outputFormat = Integer.valueOf (sharedPreferences.getString (AppConstants.FM_SP_OUTPUT_FORMAT,
+                        String.valueOf (CallRecorderConfig.CALL_RECORDER_DEFAULT_OUTPUT_FORMAT)));
+            }
+            if (audioEncoder == null) {
+                audioEncoder = Integer.valueOf (sharedPreferences.getString (AppConstants.FM_SP_AUDIO_ENCODER,
+                        String.valueOf (CallRecorderConfig.CALL_RECORDER_DEFAULT_AUDIO_ENCODER)));
+            }
+            vibrate = sharedPreferences.getBoolean (AppConstants.FM_SP_VIBRATE, true);
+            turnOnSpeaker = sharedPreferences.getBoolean (AppConstants.FM_SP_TURN_ON_SPEAKER, false);
+            maxUpVolume = sharedPreferences.getBoolean (AppConstants.FM_SP_MAX_UP_VOLUME, true);
         }
         if (maxUpVolume) {
             if (audioManager != null) {
@@ -239,7 +342,7 @@ public class CallRecorderService extends Service {
             recordsOutputDirectoryPath = AppConstants.sExternalFilesDirPathMemory;
         }
         String outputFilePath = recordsOutputDirectoryPath + File.separator + phoneStateIncomingNumber + type + beginTimestamp;
-        LogE (TAG, "outputFilePath " + outputFilePath);
+        LogE (TAG, "outputFilePath :" + outputFilePath);
         try {
             mediaRecorder = new MediaRecorder ();
         } catch (Exception e) {
@@ -286,8 +389,8 @@ public class CallRecorderService extends Service {
                 mediaRecorder.setOutputFormat (outputFormat);
                 mediaRecorder.setAudioEncoder (audioEncoder);
                 mediaRecorder.setOutputFile (outputFilePath);
-                boolean otherPrepare = prepare ();
-                boolean otherStart = start ();
+                boolean otherPrepare = prepare();
+                boolean otherStart = start();
                 if (otherPrepare && otherStart) {
                     succeed = true;
                     break;
@@ -510,7 +613,7 @@ public class CallRecorderService extends Service {
             LogE (TAG, "Media recorder error extra: " + extra);
         }
     };
-
+    @RequiresPermission (Manifest.permission.RECORD_AUDIO)
     public void endRecorder () {
         if (mediaRecorder == null) {
             return;
@@ -743,5 +846,78 @@ public class CallRecorderService extends Service {
             LogD (TAG, "Cannot release media recorder when it is null");
         }
         return false;
+    }
+
+    @Override
+    public void onDestroy () {
+        if (ContextCompat.checkSelfPermission (this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+            endRecorder ();
+        }
+        if (phoneStateIncomingNumber != null) {
+            phoneStateIncomingNumber = null;
+        }
+        if (isOutgoing) {
+            isOutgoing = false;
+        }
+        if (isIncoming) {
+            isIncoming = false;
+        }
+        if (sharedPreferences != null) {
+            sharedPreferences = null;
+        }
+        super.onDestroy ();
+        LogD (TAG, "Service destroy");
+        if (audioManager != null) {
+            audioManager = null;
+        }
+        if (vibrator != null) {
+            vibrator = null;
+        }
+        if (telephonyManager != null) {
+            telephonyManager = null;
+        }
+        if (notificationManager != null) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+                if (notificationChannel != null) {
+                    try {
+                        stopForeground (true);
+                    } catch (Exception e) {
+                        LogE (TAG, e.getMessage ());
+                        LogE (TAG, e.toString ());
+                        e.printStackTrace ();
+                    }
+                    try {
+                        notificationManager.deleteNotificationChannel (notificationChannel.getId ());
+                    } catch (Exception e) {
+                        LogE (TAG, e.getMessage ());
+                        LogE (TAG, e.toString ());
+                        e.printStackTrace ();
+                    }
+                    notificationChannel = null;
+                }
+            } else {
+                try {
+                    notificationManager.cancel (FOREGROUND_NOTIFICATION_ID);
+                } catch (Exception e) {
+                    LogE (TAG, e.getMessage ());
+                    LogE (TAG, e.toString ());
+                    e.printStackTrace ();
+                }
+            }
+            notificationManager = null;
+        }
+        if (realm != null) {
+            if (!realm.isClosed ()) {
+                try {
+                    realm.close ();
+                } catch (Exception e) {
+                    LogE (TAG, e.getMessage ());
+                    LogE (TAG, e.toString ());
+                    e.printStackTrace ();
+                }
+            }
+            realm = null;
+        }
+        isServiceRunning = false;
     }
 }

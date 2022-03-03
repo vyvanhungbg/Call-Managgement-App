@@ -36,7 +36,9 @@ public class ManagerPhoneStateReceiver extends BroadcastReceiver {
         }
         if(!intent.getAction().toString().equals(TelephonyManager.ACTION_PHONE_STATE_CHANGED)){
             LogE(TAG, "Receiver receive: intent action mismatch");
+            return;
         }
+        ReceiveSuccessful (context, intent);
     }
 
     public void ReceiveSuccessful(Context context, Intent intent){

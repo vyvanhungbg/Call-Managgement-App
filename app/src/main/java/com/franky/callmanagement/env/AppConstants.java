@@ -76,4 +76,5 @@ public class AppConstants {
      * The S external cache dir path memory.
      */
     sExternalCacheDirPathMemory = null;
+    public static String sProcessName = null;
 }
