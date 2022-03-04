@@ -3,6 +3,7 @@ package com.franky.callmanagement.fragments;
 import static com.franky.callmanagement.utils.LogUtil.LogE;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.pm.PackageManager;
 import android.os.Bundle;
@@ -20,6 +21,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.animation.Animation;
 import android.widget.LinearLayout;
 import android.widget.ScrollView;
 import android.widget.TextView;
@@ -54,14 +56,11 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
     private Calendar calendar = Calendar.getInstance();
     private int isDaySelected ;
     private List<LinearLayout> layoutTimeLine;
+    private String isMonthSelected ;
 
-
-    public RecyclerView mRecyclerView = null;
     private Realm mRealm = null;
     private RealmResults<CallObject> mCallObjectRealmResults = null;
 
-    private ScrollView mScrollView = null;
-    private LinearLayout mMainLinearLayout = null;
 
     public static AllCallFragment newInstance() {
         AllCallFragment fragment = new AllCallFragment();
@@ -70,44 +69,17 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
         return fragment;
     }
 
+    @SuppressLint("UseRequireInsteadOfGet")
+    private Context getContextNonNull () {
+        return Objects.requireNonNull (getContext ());
+    }
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        try {
-            Realm.init(getContext());
-            mRealm = Realm.getDefaultInstance ();
-        } catch (Exception e) {
-            LogE (TAG, e.getMessage ());
-            LogE (TAG, e.toString ());
-            e.printStackTrace ();
-        }
-        if (mRealm != null && !mRealm.isClosed ()) {
-            try {
-                mCallObjectRealmResults = mRealm.where (CallObject.class)
-                        .greaterThan ("mEndTimestamp", 0L)
-                        .sort ("mBeginTimestamp", Sort.DESCENDING)
-                        .findAll ();
-            } catch (Exception e) {
-                LogE (TAG, e.getMessage ());
-                LogE (TAG, e.toString ());
-                e.printStackTrace ();
-            }
-            if (mCallObjectRealmResults != null) {
-                mCallObjectRealmResults.addChangeListener (incomingCallObjectRealmResults -> {
-                    if (mRecyclerView != null) {
-                        List<CallObject> incomingCallObjectList = null;
-                        if (mRealm != null) {
-                            incomingCallObjectList = mRealm.copyFromRealm (incomingCallObjectRealmResults);
-                        }
-                        if (incomingCallObjectList == null) {
-                            incomingCallObjectList = new ArrayList<> (incomingCallObjectRealmResults);
-                        }
-                        setAdapter (populateAdapter (mRecyclerView.getContext (), incomingCallObjectList));
-                    }
-                    updateLayouts ();
-                });
-            }
-        }
+
+        init();
+
     }
 
     private AllCallRecyclerAdapter populateAdapter (@NonNull Context context, @NonNull List<CallObject> callObjectList) {
@@ -134,6 +106,8 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
                 }
                 list.get (list.size () - 1).setIsLastInCategory (true);
             }
+
+
         }
         if (!callObjectList.isEmpty ()) {
             calendar.setTime (new Date (callObjectList.get (0).getBeginTimestamp ()));
@@ -159,6 +133,7 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
             list.add (new CallObject (true, context.getString (R.string.older)));
             list.addAll (callObjectList);
         }
+
         try {
             if (ActivityCompat.checkSelfPermission (getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
                 return new AllCallRecyclerAdapter ( list, true);
@@ -173,66 +148,60 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
 
 
 
-    private void updateLayouts () {
-        if (mRecyclerView != null && mRecyclerView.getAdapter () != null && mRecyclerView.getAdapter ().getItemCount () > 0) {
-            if (mScrollView != null && mScrollView.getVisibility () != View.GONE) {
-                mScrollView.setVisibility (View.GONE);
+    private void updateLayouts (RealmResults<CallObject> mCallObjectRealmResults) {
+        if(mCallObjectRealmResults == null){
+            if ( binding.fragmentAllCallMainLinearLayout.getVisibility () != View.GONE) {
+                binding.fragmentAllCallMainLinearLayout.setVisibility (View.GONE);
             }
-            if (mMainLinearLayout != null && mMainLinearLayout.getVisibility () != View.VISIBLE) {
-                mMainLinearLayout.setVisibility (View.VISIBLE);
+            if ( binding.fragmentAllScrollView.getVisibility () != View.VISIBLE) {
+                binding.fragmentAllScrollView.setVisibility (View.VISIBLE);
+            }
+        }else if (mCallObjectRealmResults.size() > 0) {
+            if (binding.fragmentAllScrollView.getVisibility () != View.GONE) {
+                binding.fragmentAllScrollView.setVisibility (View.GONE);
+            }
+            if ( binding.fragmentAllCallMainLinearLayout.getVisibility () != View.VISIBLE) {
+                binding.fragmentAllCallMainLinearLayout.setVisibility (View.VISIBLE);
             }
         } else {
-            if (mMainLinearLayout != null && mMainLinearLayout.getVisibility () != View.GONE) {
-                mMainLinearLayout.setVisibility (View.GONE);
+            if ( binding.fragmentAllCallMainLinearLayout.getVisibility () != View.GONE) {
+                binding.fragmentAllCallMainLinearLayout.setVisibility (View.GONE);
             }
-            if (mScrollView != null && mScrollView.getVisibility () != View.VISIBLE) {
-                mScrollView.setVisibility (View.VISIBLE);
+            if ( binding.fragmentAllScrollView.getVisibility () != View.VISIBLE) {
+                binding.fragmentAllScrollView.setVisibility (View.VISIBLE);
             }
         }
     }
 
-    private void setAdapter (@NonNull AllCallRecyclerAdapter incomingCallRecyclerViewAdapter) {
-        if (mRecyclerView != null) {
-            mRecyclerView.setAdapter (incomingCallRecyclerViewAdapter);
-            mRecyclerView.setItemViewCacheSize (incomingCallRecyclerViewAdapter.getItemCount ());
-        }
-    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
 
         binding = DataBindingUtil.inflate(inflater,R.layout.fragment_all_call, container, false);
-        init();
+        layoutTimeLine = getAllChildOfTimeLine(); // lấy binding của 7 item để set value
+
 
         presenter.getTimeLine(AllCallPresenter.NOW_TIME_LINE);
         setDaysSelectedListener();
         setOnClickButtonNextOrPrevious();
+        
 
-
-        mScrollView = binding.fragmentAllcallTabScrollView;
-        mMainLinearLayout = binding.fragmentAllcallTabMainLinearLayout;
-        mRecyclerView = binding.fragmentAllcallTabRecyclerView;
-        LinearLayoutManager linearLayoutManager = new LinearLayoutManager (mRecyclerView.getContext ());
-        linearLayoutManager.setOrientation (RecyclerView.VERTICAL);
-        mRecyclerView.setHasFixedSize (true);
-        mRecyclerView.setLayoutManager (linearLayoutManager);
-        mRecyclerView.setItemAnimator (new DefaultItemAnimator());
-        List<CallObject> incomingCallObjectList = null;
-        if (mRealm != null) {
-            incomingCallObjectList = mRealm.copyFromRealm (mCallObjectRealmResults);
-        }
-        if (incomingCallObjectList == null) {
-            incomingCallObjectList = new ArrayList<> (mCallObjectRealmResults);
-        }
-        setAdapter (populateAdapter (mRecyclerView.getContext (), incomingCallObjectList));
-
+        presenter.getCallObjectRealmObject(mRealm);
         return binding.getRoot();
     }
 
 
     public void init(){
         presenter = new AllCallPresenter(this);
-        layoutTimeLine = getAllChildOfTimeLine();
+        /// Khởi tạo Realm
+        try {
+            mRealm = Realm.getDefaultInstance ();
+        } catch (Exception e) {
+            LogE (TAG, e.getMessage ());
+            LogE (TAG, e.toString ());
+            e.printStackTrace ();
+        }
         // lấy vị trí ngày hôm nay
         int nowDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         if(nowDayOfWeek >1 && nowDayOfWeek <8){
@@ -240,6 +209,7 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
         }else if(nowDayOfWeek ==1){
             isDaySelected = 6;
         }
+        isMonthSelected = String.valueOf(calendar.get(Calendar.MONTH));
     }
 
 
@@ -283,10 +253,50 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
             textViewDays.setText(days[i]);
         }
         binding.tvFromDayToDay.setText(fromDay+ " --> "+toDay);
+        try {
+            String [] str = fromDay.split("/");
+            isMonthSelected = str[1];
+        }catch (Exception e){
+            LogE(TAG,e.getMessage());
+            isMonthSelected = fromDay.substring(fromDay.length()-2,fromDay.length());
+        }
     }
 
+    @Override
+    public void actionViewAllCallObject(RealmResults<CallObject> mCallObjectRealmResults) {
+        LinearLayoutManager linearLayoutManager = new LinearLayoutManager (getActivity(),LinearLayoutManager.VERTICAL,false);
+        binding.fragmentAllCallRecyclerView.setLayoutManager(linearLayoutManager);
+        binding.fragmentAllCallRecyclerView.setHasFixedSize(true);
+        if (mCallObjectRealmResults != null) {
+            
+            //Update dữ liệu mỗi khi có thay đổi
+            mCallObjectRealmResults.addChangeListener (incomingCallObjectRealmResults -> {
+                if (binding.fragmentAllCallRecyclerView != null) {
+                    setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), convertRealmResultsToList(incomingCallObjectRealmResults)));
+                }
+                updateLayouts(incomingCallObjectRealmResults);
+            });
+            
+            // Set dữ liệu lần đầu tiên
+            setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), convertRealmResultsToList(mCallObjectRealmResults)));
+        }
+        // set view hiển thị 
+        updateLayouts(mCallObjectRealmResults);
+    }
 
-
+    public List<CallObject> convertRealmResultsToList(RealmResults<CallObject> mCallObjectRealmResults){
+        if (mRealm != null) {
+            return mRealm.copyFromRealm (mCallObjectRealmResults);
+        }else {
+            return new ArrayList<>(mCallObjectRealmResults);
+        }
+    }
+    private void setAdapter ( AllCallRecyclerAdapter incomingCallRecyclerViewAdapter) {
+        if (binding.fragmentAllCallRecyclerView != null) {
+            binding.fragmentAllCallRecyclerView.setAdapter (incomingCallRecyclerViewAdapter);
+            binding.fragmentAllCallRecyclerView.setItemViewCacheSize (incomingCallRecyclerViewAdapter.getItemCount ());
+        }
+    }
 
     public void setDaysSelectedListener() {
         for(int i=0;i<layoutTimeLine.size();i++){
@@ -298,9 +308,19 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
                         view.setBackground(ContextCompat.getDrawable(view.getContext(),R.drawable.custom_time_line_selected));
                         isDaySelected = positionSelect;
                     Log.e("Selected day", isDaySelected+"");
+
                 }
             });
         }
+    }
+
+    public void filterCallByDay(){
+        LinearLayout layout = (LinearLayout) layoutTimeLine.get(isDaySelected);
+        TextView textViewDays = (TextView) layout.getChildAt(1); // get TextView day
+        String dayOfMonth = textViewDays.getText().toString();
+        Log.e(TAG,"dayofmonthSelected "+dayOfMonth);
+        LogE(TAG,"monthSelected "+isMonthSelected);
+
     }
 
     public void setOnClickButtonNextOrPrevious(){
@@ -317,5 +337,12 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
                 presenter.getTimeLine(AllCallPresenter.NEXT_TIME_LINE);
             }
         });
+        binding.imgvFilter.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                filterCallByDay();
+            }
+        });
+
     }
 }

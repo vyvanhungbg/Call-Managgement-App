@@ -1,6 +1,6 @@
 package com.franky.callmanagement.adapters;
 
-import static androidx.constraintlayout.widget.Constraints.TAG;
+
 
 import static com.franky.callmanagement.utils.LogUtil.LogE;
 
@@ -50,17 +50,20 @@ import java.util.concurrent.TimeUnit;
 import io.realm.Realm;
 
 public class AllCallRecyclerAdapter extends RecyclerView.Adapter<AllCallRecyclerAdapter.ViewHolder> {
+    private static final String TAG = AllCallRecyclerAdapter.class.getSimpleName();
     private static final int VIEW_HEADER = 0 , VIEW_ITEM = 1;
     private List<CallObject> objectList, objectFilteredList;
     private boolean readContacts = false;
 
-    public AllCallRecyclerAdapter(List<CallObject> objectList, boolean readContacts) {
-        this.objectList = objectList;
-        this.objectFilteredList = objectList;
+    public AllCallRecyclerAdapter(List<CallObject> mObjectList, boolean readContacts) {
+        this.objectList = mObjectList;
+        this.objectFilteredList = mObjectList;
         this.readContacts = readContacts;
+
+        LogE(TAG,"View adapter"+objectList.size()+" "+objectFilteredList.size());
     }
 
-    @NonNull
+
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
 
@@ -68,9 +71,11 @@ public class AllCallRecyclerAdapter extends RecyclerView.Adapter<AllCallRecycler
         if (viewType == VIEW_HEADER) {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.adapter_view_header, parent, false);
             viewHolder = new HeaderViewHolder (view);
+            LogE(TAG,"View header");
         } else {
             View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_call, parent, false);
             viewHolder = new ItemViewHolder (view);
+            LogE(TAG,"View type");
         }
         return viewHolder;
     }

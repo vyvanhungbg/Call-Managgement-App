@@ -75,6 +75,7 @@
                         android:drawableLeft="@drawable/ic_baseline_search_24"/>
 
                     <ImageView
+                        android:id="@+id/imgv_filter"
                         android:layout_weight="1"
                         android:layout_width="0dp"
                         android:src="@drawable/ic_baseline_filter_alt_24"
@@ -367,13 +368,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent">
                     <ScrollView
-                        android:id="@+id/fragment_allcall_tab_scroll_view"
+                        android:id="@+id/fragment_all_scroll_view"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:padding="@dimen/_16sdp"
                         android:clipToPadding="false"
                         android:scrollbarStyle="outsideOverlay"
-                        android:fillViewport="true">
+                        android:fillViewport="true"
+                        android:visibility="gone">
 
                         <LinearLayout
                             android:layout_width="match_parent"
@@ -443,7 +445,7 @@
                     </ScrollView>
 
                     <LinearLayout
-                        android:id="@+id/fragment_allcall_tab_main_linear_layout"
+                        android:id="@+id/fragment_all_call_main_linear_layout"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:orientation="vertical"
@@ -451,17 +453,9 @@
                         android:scrollbarStyle="outsideOverlay"
                         android:fillViewport="true"
                         android:focusableInTouchMode="true"
-                        android:visibility="gone">
+                        android:visibility="visible">
 
-<!--                        <androidx.appcompat.widget.SearchView-->
-<!--                            android:id="@+id/fragment_allcall_tab_search_view"-->
-<!--                            android:layout_width="match_parent"-->
-<!--                            android:layout_height="wrap_content"-->
-<!--                            android:background="@drawable/box_background"-->
-<!--                            app:queryHint="@string/search"-->
-<!--                            app:defaultQueryHint="@string/search"-->
-<!--                            app:iconifiedByDefault="false"-->
-<!--                            android:visibility="gone"/>-->
+
 
                         <View
                             android:layout_width="match_parent"
@@ -471,7 +465,7 @@
                             android:visibility="gone"/>
 
                         <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/fragment_allcall_tab_recycler_view"
+                            android:id="@+id/fragment_all_call_recycler_view"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent" />
 
