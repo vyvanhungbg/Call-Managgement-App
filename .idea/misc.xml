@@ -31,10 +31,12 @@
         <entry key="app/src/main/res/drawable/ic_play.xml" value="0.151" />
         <entry key="app/src/main/res/drawable/ic_time.xml" value="0.151" />
         <entry key="app/src/main/res/drawable/seekbar_style.xml" value="0.151" />
+        <entry key="app/src/main/res/layout/activity_call.xml" value="0.16" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17239583333333333" />
         <entry key="app/src/main/res/layout/adapter_view_header.xml" value="0.33541666666666664" />
         <entry key="app/src/main/res/layout/banner.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/border_shadow.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/content_call.xml" value="0.19630192502532928" />
         <entry key="app/src/main/res/layout/fragment_all_call.xml" value="0.33841886269070737" />
         <entry key="app/src/main/res/layout/fragment_call_statistics.xml" value="0.17239583333333333" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2" />

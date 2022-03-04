@@ -96,9 +96,10 @@ public class AllCallRecyclerAdapter extends RecyclerView.Adapter<AllCallRecycler
                 }else {
                     ItemViewHolder itemViewHolder = (ItemViewHolder) holder;
                     String phoneNumber = callObject.getPhoneNumber();
-                    if(!phoneNumber.trim().isEmpty() && phoneNumber!=null){
+
+                    if(phoneNumber!=null){
                         // lấy thông tin từ đanh bạ
-                        if (readContacts) {
+                        if (readContacts && !phoneNumber.trim().isEmpty()) {
                             try {
                                 Uri uri = Uri.withAppendedPath (ContactsContract.PhoneLookup.CONTENT_FILTER_URI, Uri.encode (phoneNumber));
                                 Cursor cursor = holder.itemView.getContext ().getContentResolver ().query (uri, new String[] {ContactsContract.PhoneLookup.DISPLAY_NAME, ContactsContract.PhoneLookup._ID}, null, null, null);

@@ -266,25 +266,19 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
             //Update dữ liệu mỗi khi có thay đổi
             mCallObjectRealmResults.addChangeListener (incomingCallObjectRealmResults -> {
                 if (binding.fragmentAllCallRecyclerView != null) {
-                    setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), convertRealmResultsToList(incomingCallObjectRealmResults), getDayOfYearSelected()));
+                    setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), presenter.convertRealmResultsToList(mRealm,incomingCallObjectRealmResults), presenter.getDayOfYearSelected(timeline,isDaySelected)));
                     LogE(TAG,"List Realm Resuls change listener");
                 }
 
             });
             
             // Set dữ liệu lần đầu tiên
-            setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), convertRealmResultsToList(mCallObjectRealmResults),getDayOfYearSelected()));
+            setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), presenter.convertRealmResultsToList(mRealm,mCallObjectRealmResults),presenter.getDayOfYearSelected(timeline,isDaySelected)));
         }
         // set view hiển thị
     }
 
-    public List<CallObject> convertRealmResultsToList(RealmResults<CallObject> mCallObjectRealmResults){
-        if (mRealm != null) {
-            return mRealm.copyFromRealm (mCallObjectRealmResults);
-        }else {
-            return new ArrayList<>(mCallObjectRealmResults);
-        }
-    }
+
     private void setAdapter ( AllCallRecyclerAdapter incomingCallRecyclerViewAdapter) {
         updateLayouts(incomingCallRecyclerViewAdapter.getItemCount());
         if (binding.fragmentAllCallRecyclerView != null) {
@@ -310,42 +304,15 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
         }
     }
 
-    public void filterCallByDay(){
-        LinearLayout layout = (LinearLayout) layoutTimeLine.get(isDaySelected);
-        TextView textViewDays = (TextView) layout.getChildAt(1); // get TextView day
-        String dayOfMonth = textViewDays.getText().toString();
-        Log.e(TAG,"Time line "+ Arrays.toString(timeline));
-        Log.e(TAG,"dayofmonthSelected "+ timeline[isDaySelected]);
 
 
-    }
-
-    public int getDayOfYearSelected(){
-        Calendar calendar = Calendar.getInstance();
-        int yearSelected, monthSelected, daySelected;
-        String timeLineSelected = timeline[isDaySelected];
-        try {
-            String [] str = timeLineSelected.split("/");
-            daySelected = Integer.parseInt(str[0]);
-            monthSelected = Integer.parseInt(str[1]);
-            yearSelected = Integer.parseInt(str[2]);
-            calendar.set(yearSelected,monthSelected-1,daySelected);
-            LogE(TAG, "get Day of Year selec "+calendar.get(Calendar.DAY_OF_YEAR));
-            return calendar.get(Calendar.DAY_OF_YEAR);
-        }catch (Exception e){
-            LogE(TAG,e.getMessage());
-            e.printStackTrace();
-            return calendar.get(Calendar.DAY_OF_YEAR);
-        }
-
-    }
 
     public void setOnClickButtonNextOrPrevious(){
         binding.btnPreviousTimeLine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
                     presenter.getTimeLine(AllCallPresenter.PREVIOUS_TIME_LINE);
-                setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), convertRealmResultsToList(mCallObjectRealmResults),getDayOfYearSelected()));
+                setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), presenter.convertRealmResultsToList(mRealm,mCallObjectRealmResults),presenter.getDayOfYearSelected(timeline,isDaySelected)));
             }
         });
 
@@ -353,13 +320,13 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
             @Override
             public void onClick(View view) {
                 presenter.getTimeLine(AllCallPresenter.NEXT_TIME_LINE);
-                setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), convertRealmResultsToList(mCallObjectRealmResults),getDayOfYearSelected()));
+                setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), presenter.convertRealmResultsToList(mRealm,mCallObjectRealmResults),presenter.getDayOfYearSelected(timeline,isDaySelected)));
             }
         });
         binding.imgvFilter.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                filterCallByDay();
+
             }
         });
 

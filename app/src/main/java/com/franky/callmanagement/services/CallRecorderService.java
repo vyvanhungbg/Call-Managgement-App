@@ -5,6 +5,7 @@ import static com.franky.callmanagement.utils.LogUtil.LogE;
 import static com.franky.callmanagement.utils.LogUtil.LogI;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
 import android.app.Notification;
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
@@ -21,6 +22,7 @@ import android.os.IBinder;
 import android.os.VibrationEffect;
 import android.os.Vibrator;
 import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.telephony.TelephonyManager;
 
 import androidx.annotation.Nullable;
@@ -199,13 +201,13 @@ public class CallRecorderService extends Service {
 
 
 
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
-
+            if (false) {
+                    LogE(TAG, " MÁY vượt cấp");
             } else {
                 // luuw trữ thông tin
                 if (intent.hasExtra (TelephonyManager.EXTRA_INCOMING_NUMBER)) {
                     phoneStateIncomingNumber = intent.getStringExtra (TelephonyManager.EXTRA_INCOMING_NUMBER);
-                    LogE (TAG, "phoneStateIncomingNumber " + phoneStateIncomingNumber);
+                    LogE (TAG, "-------phoneStateIncomingNumber " + phoneStateIncomingNumber);
 
                     Realm realmf = null;
                     try {
@@ -272,6 +274,7 @@ public class CallRecorderService extends Service {
     }
 
 
+    @SuppressLint("HardwareIds")
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     public void beginRecorder (@Nullable Integer audioSource, @Nullable Integer outputFormat, @Nullable Integer audioEncoder) {
         if (mediaRecorder != null) {
@@ -481,14 +484,16 @@ public class CallRecorderService extends Service {
         }
         if (telephonyManager != null) {
             try {
+//                simSerialNumber = Settings.Secure.getString(getApplicationContext().getContentResolver(),
+//                        Settings.Secure.ANDROID_ID);
                 simSerialNumber = telephonyManager.getSimSerialNumber();
-                LogI (TAG, "SIM Serial Number: " + simSerialNumber);
+                LogE (TAG, "SIM Serial Number: " + simSerialNumber);
                 simOperator = telephonyManager.getSimOperator ();
                 simOperatorName = telephonyManager.getSimOperatorName ();
                 simCountryIso = telephonyManager.getSimCountryIso ();
-                LogI (TAG, "SIM Operator: " + simOperator);
-                LogI (TAG, "SIM Operator Name: " + simOperatorName);
-                LogI (TAG, "SIM Country ISO: " + simCountryIso);
+                LogE (TAG, "SIM Operator: " + simOperator);
+                LogE (TAG, "SIM Operator Name: " + simOperatorName);
+                LogE (TAG, "SIM Country ISO: " + simCountryIso);
                 networkOperator = telephonyManager.getNetworkOperator ();
                 networkOperatorName = telephonyManager.getNetworkOperatorName ();
                 networkCountryIso = telephonyManager.getNetworkCountryIso ();
@@ -496,6 +501,8 @@ public class CallRecorderService extends Service {
                 LogE (TAG, e.getMessage ());
                 LogE (TAG, e.toString ());
                 e.printStackTrace ();
+
+                /// Android 11 bị lỗi chức năng này
             }
         }
         if (realm != null && !realm.isClosed ()) {

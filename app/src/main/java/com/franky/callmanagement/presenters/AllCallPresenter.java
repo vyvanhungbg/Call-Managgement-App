@@ -61,6 +61,35 @@ public class AllCallPresenter {
 
     }
 
+    public List<CallObject> convertRealmResultsToList(Realm mRealm,RealmResults<CallObject> mCallObjectRealmResults){
+        if (mRealm != null) {
+            return mRealm.copyFromRealm (mCallObjectRealmResults);
+        }else {
+            return new ArrayList<>(mCallObjectRealmResults);
+        }
+    }
+
+    public int getDayOfYearSelected(String timeline[] , int isDaySelected){
+        Calendar calendar = Calendar.getInstance();
+        int yearSelected, monthSelected, daySelected;
+        String timeLineSelected = timeline[isDaySelected];
+        try {
+            String [] str = timeLineSelected.split("/");
+            daySelected = Integer.parseInt(str[0]);
+            monthSelected = Integer.parseInt(str[1]);
+            yearSelected = Integer.parseInt(str[2]);
+            calendar.set(yearSelected,monthSelected-1,daySelected);
+            LogE(TAG, "get Day of Year selec "+calendar.get(Calendar.DAY_OF_YEAR));
+            return calendar.get(Calendar.DAY_OF_YEAR);
+        }catch (Exception e){
+            LogE(TAG,e.getMessage());
+            e.printStackTrace();
+            return calendar.get(Calendar.DAY_OF_YEAR);
+        }
+
+    }
+
+
 
     public void getCallObjectRealmObject(Realm realm){
         RealmResults<CallObject> mCallObjectRealmResults = null;
