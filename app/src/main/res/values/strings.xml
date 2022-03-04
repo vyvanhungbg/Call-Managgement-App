@@ -64,4 +64,15 @@
     <string name="today">Today</string>
     <string name="yesterday">Yesterday</string>
     <string name="older">Older</string>
+
+    <string name="play">Play</string>
+    <string name="pause">Pause</string>
+
+    <string name="volume_up">Volume up</string>
+    <string name="volume_down">Volume down</string>
+    <string name="number">Number</string>
+
+    <string name="time_date">Time - Date</string>
+    <string name="date_time">Date - Time</string>
+    <string name="duration">Duration</string>
 </resources>

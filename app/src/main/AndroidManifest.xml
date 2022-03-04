@@ -42,6 +42,8 @@
             </intent-filter>
         </activity>
 
+        <activity android:name=".activities.CallActivity"/>
+
         <receiver android:name=".receivers.ManagerPhoneStateReceiver"/>
         <service android:name=".services.MainService"/>
         <service android:name=".services.CallRecorderService"/>

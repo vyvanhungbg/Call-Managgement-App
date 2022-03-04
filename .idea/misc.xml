@@ -14,22 +14,33 @@
         <entry key="app/src/main/res/drawable-v24/ic_user.xml" value="0.151" />
         <entry key="app/src/main/res/drawable-v24/s_thumb_selector.xml" value="0.151" />
         <entry key="app/src/main/res/drawable-v24/s_track_selector.xml" value="0.151" />
+        <entry key="app/src/main/res/drawable/bg_ic.xml" value="0.151" />
         <entry key="app/src/main/res/drawable/custom_button_next_previous_rounded.xml" value="0.174" />
         <entry key="app/src/main/res/drawable/custom_button_record.xml" value="0.181" />
         <entry key="app/src/main/res/drawable/custom_navigate_time_line_rounded.xml" value="0.174" />
         <entry key="app/src/main/res/drawable/custom_seach_view.xml" value="0.1415" />
+        <entry key="app/src/main/res/drawable/custom_thumb.xml" value="0.151" />
         <entry key="app/src/main/res/drawable/custom_time_line_rounded.xml" value="0.1415" />
         <entry key="app/src/main/res/drawable/custom_time_line_selected.xml" value="0.1415" />
         <entry key="app/src/main/res/drawable/ic_baseline_mic_24.xml" value="0.1415" />
         <entry key="app/src/main/res/drawable/ic_baseline_mic_off_24.xml" value="0.1415" />
+        <entry key="app/src/main/res/drawable/ic_duration.xml" value="0.151" />
         <entry key="app/src/main/res/drawable/ic_outgoing.xml" value="0.151" />
+        <entry key="app/src/main/res/drawable/ic_outline_volume_down_24px.xml" value="0.151" />
+        <entry key="app/src/main/res/drawable/ic_phonenumber.xml" value="0.151" />
+        <entry key="app/src/main/res/drawable/ic_play.xml" value="0.151" />
+        <entry key="app/src/main/res/drawable/ic_time.xml" value="0.151" />
+        <entry key="app/src/main/res/drawable/seekbar_style.xml" value="0.151" />
         <entry key="app/src/main/res/layout/activity_main.xml" value="0.17239583333333333" />
         <entry key="app/src/main/res/layout/adapter_view_header.xml" value="0.33541666666666664" />
-        <entry key="app/src/main/res/layout/fragment_all_call.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/banner.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/border_shadow.xml" value="0.21822916666666667" />
+        <entry key="app/src/main/res/layout/fragment_all_call.xml" value="0.33841886269070737" />
         <entry key="app/src/main/res/layout/fragment_call_statistics.xml" value="0.17239583333333333" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.2" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.17239583333333333" />
         <entry key="app/src/main/res/layout/item_call.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/toolbar.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/menu/bottom_navigation_bar.xml" value="0.33541666666666664" />
       </map>
     </option>

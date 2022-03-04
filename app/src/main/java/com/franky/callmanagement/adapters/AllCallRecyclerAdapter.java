@@ -35,6 +35,7 @@ import androidx.core.graphics.drawable.DrawableCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.franky.callmanagement.R;
+import com.franky.callmanagement.activities.CallActivity;
 import com.franky.callmanagement.env.AppConstants;
 import com.franky.callmanagement.models.CallObject;
 import com.franky.callmanagement.utils.ResourceUtil;
@@ -177,7 +178,7 @@ public class AllCallRecyclerAdapter extends RecyclerView.Adapter<AllCallRecycler
 
                     itemViewHolder.beginDateTimeTextView.setText (beginDateTime != null ? beginDateTime + "\n(" + durationString + ")" : "N/A");
                     String finalCorrespondent = phoneNumber;
-                   // itemViewHolder.menuImageButton.setOnClickListener (view -> showItemMenuDialog (holder.itemView.getContext (), callObject, finalCorrespondent));
+                    itemViewHolder.menuImageButton.setOnClickListener (view -> showItemMenuDialog (holder.itemView.getContext (), callObject, finalCorrespondent));
                     if (callObject.getType ().equals ("incoming")) {
                         itemViewHolder.imageView.setImageResource (R.drawable.ic_incoming);
                         itemViewHolder.imageView.setColorFilter (ContextCompat.getColor (holder.itemView.getContext (), R.color.cp_6), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -334,19 +335,19 @@ public class AllCallRecyclerAdapter extends RecyclerView.Adapter<AllCallRecycler
 
 
     private void openIncomingCall (@NonNull Context context, @NonNull CallObject incomingCallObject) {
-//        Intent intent = new Intent (context, CallActivity.class);
-//        intent.putExtra (AppConstants.INTENT_ACTION_INCOMING_CALL, true);
-//        intent.putExtra ("mBeginTimestamp", incomingCallObject.getBeginTimestamp ());
-//        intent.putExtra ("mEndTimestamp", incomingCallObject.getEndTimestamp ());
-//        intent.putExtra ("mType", incomingCallObject.getType ());
-//        if (incomingCallObject.getCorrespondentName () != null && !incomingCallObject.getCorrespondentName ().trim ().isEmpty ()) {
-//            intent.putExtra ("mCorrespondentName", incomingCallObject.getCorrespondentName ());
-//        }
-//        try {
-//            context.startActivity (intent);
-//        } catch (Exception e) {
-//            e.printStackTrace ();
-//        }
+        Intent intent = new Intent (context, CallActivity.class);
+        intent.putExtra (AppConstants.INTENT_ACTION_INCOMING_CALL, true);
+        intent.putExtra ("mBeginTimestamp", incomingCallObject.getBeginTimestamp ());
+        intent.putExtra ("mEndTimestamp", incomingCallObject.getEndTimestamp ());
+        intent.putExtra ("mType", incomingCallObject.getType ());
+        if (incomingCallObject.getCorrespondentName () != null && !incomingCallObject.getCorrespondentName ().trim ().isEmpty ()) {
+            intent.putExtra ("mCorrespondentName", incomingCallObject.getCorrespondentName ());
+        }
+        try {
+            context.startActivity (intent);
+        } catch (Exception e) {
+            e.printStackTrace ();
+        }
     }
 
 
