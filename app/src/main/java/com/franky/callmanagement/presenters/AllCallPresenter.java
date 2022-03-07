@@ -31,7 +31,7 @@ public class AllCallPresenter {
         this.listener = listener;
         Calendar now = Calendar.getInstance();
         now = Calendar.getInstance();
-        delta = -now.get(GregorianCalendar.DAY_OF_WEEK) + 2; //add 2 if your week start on monday
+        delta = -now.get(GregorianCalendar.DAY_OF_WEEK) +2; //add 2 if your week start on monday // -7 để lịch chủ nhật không bị tính vào tuần sau
     }
 
     public void getTimeLine(int flag){
@@ -42,7 +42,8 @@ public class AllCallPresenter {
 
         delta = delta + (NEXT_TIME_LINE == flag ? 7 : PREVIOUS_TIME_LINE == flag ? -7 : 0); // change time line by button
 
-        Log.e("dellta",delta+"");
+        Log.e("dellta",delta+" | now : "+now.getTime().toString()); // t2 deleta =0, dayofwwek = 2
+        Log.e("DAy of week", now.get(Calendar.DAY_OF_WEEK)+"");
         now.add(Calendar.DAY_OF_MONTH, delta );
         for (int i = 0; i < 7; i++)
         {

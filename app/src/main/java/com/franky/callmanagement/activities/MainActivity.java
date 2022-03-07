@@ -59,6 +59,7 @@ public class MainActivity extends AppCompatActivity  {
         onClickNavigationBar();
     }
 
+    // Thêm các fragment vào fragmentManager
     private void customFragmentManager(){
         fragmentManager.beginTransaction()
                 .add(R.id.fragment_container,allCallFragment,allCallFragment.getTag()).hide(allCallFragment)

@@ -29,6 +29,7 @@ import android.widget.TextView;
 import com.franky.callmanagement.R;
 import com.franky.callmanagement.adapters.AllCallRecyclerAdapter;
 import com.franky.callmanagement.databinding.FragmentAllCallBinding;
+import com.franky.callmanagement.env.AppConfig;
 import com.franky.callmanagement.interfaces.IAllCallListener;
 import com.franky.callmanagement.models.CallObject;
 import com.franky.callmanagement.presenters.AllCallPresenter;
@@ -74,6 +75,7 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
     private Context getContextNonNull () {
         return Objects.requireNonNull (getContext ());
     }
+
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -195,6 +197,8 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
             isDaySelected = 6;
         }
 
+        LogE(TAG,"Selected day "+isDaySelected);
+
     }
 
 
@@ -251,6 +255,10 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
 
         }
         binding.tvFromDayToDay.setText(days[0]+ " --> "+days[6]);
+
+        LogE(TAG,"Selected day in time line "+days[isDaySelected]);
+
+        LogE(TAG," time line "+Arrays.toString(days));
 
     }
 

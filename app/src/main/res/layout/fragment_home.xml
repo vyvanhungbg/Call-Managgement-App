@@ -74,19 +74,21 @@
                 app:layout_constraintBottom_toBottomOf="@id/line_horizontal_2"/>
 
 
-            <Button
+            <androidx.appcompat.widget.SwitchCompat
                 android:id="@+id/btn_on_off_record"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:paddingLeft="@dimen/medium_padding"
                 android:paddingRight="@dimen/medium_padding"
+                android:thumb="@drawable/thumb_selector"
+                app:track="@drawable/track_selector"
+                app:switchMinWidth="@dimen/_50sdp"
+                android:checked="false"
                 app:layout_constraintTop_toTopOf="@id/line_horizontal_3"
                 app:layout_constraintLeft_toLeftOf="parent"
                 app:layout_constraintRight_toRightOf="parent"
-                android:background="@drawable/custom_button_record"
-                android:textStyle="bold"
-                android:textColor="@color/white"
-                android:text="@string/title_button_on_off_fragment_home"/>
+
+                />
 
 
 

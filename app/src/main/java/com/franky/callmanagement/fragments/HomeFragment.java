@@ -22,6 +22,7 @@ import android.os.PowerManager;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CompoundButton;
 
 import com.franky.callmanagement.R;
 import com.franky.callmanagement.activities.MainActivity;
@@ -43,13 +44,13 @@ import java.util.ArrayList;
 public class HomeFragment extends Fragment {
     private static final String TAG = HomeFragment.class.getSimpleName();
     private FragmentHomeBinding binding;
-    private  boolean isEnable = false;
+
     private SharedPreferences sharedPreferences ;
 
 
-    private boolean mRecordCalls = true;
-    private boolean mRecordIncomingCalls = mRecordCalls;
-    private boolean mRecordOutgoingCalls = mRecordCalls;
+    private  boolean isEnable = true;
+    private boolean mRecordIncomingCalls = isEnable;
+    private boolean mRecordOutgoingCalls = isEnable;
 
 
     public static HomeFragment newInstance() {
@@ -63,9 +64,7 @@ public class HomeFragment extends Fragment {
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
+        getSharedPrefers();
     }
 
     @Override
@@ -73,21 +72,13 @@ public class HomeFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_home, container, false);
-        getSharedPrefers();
-        binding.btnOnOffRecord.setOnClickListener(new View.OnClickListener() {
+        binding.btnOnOffRecord.setChecked(isEnable);
+        binding.btnOnOffRecord.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
-            public void onClick(View view) {
-                isEnable = !isEnable;
-                if(isEnable){
-                    binding.imgvMicro.setImageDrawable(ContextCompat.getDrawable(getContext(),R.drawable.ic_baseline_mic_24));
-                    binding.btnOnOffRecord.setText("Đang ghi âm");
-                }else {
-                    binding.imgvMicro.setImageDrawable(ContextCompat.getDrawable(getContext(),R.drawable.ic_baseline_mic_off_24));
-                    binding.btnOnOffRecord.setText("Bật ghi âm");
-                }
-                mRecordCalls = isEnable;
-                mRecordIncomingCalls = mRecordCalls;
-                mRecordOutgoingCalls = mRecordCalls;
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                isEnable = b;
+                mRecordIncomingCalls = isEnable;
+                mRecordOutgoingCalls = isEnable;
                 if (sharedPreferences != null) {
                     SharedPreferences.Editor editor = sharedPreferences.edit ();
                     editor.putBoolean (AppConstants.KEY_RECORD_INCOMING_CALLS, mRecordIncomingCalls);
@@ -131,31 +122,29 @@ public class HomeFragment extends Fragment {
         if(recordIncomingCalls || recordOutgoingCalls){
             if (!MainService.isServiceRunning) {
                 AppUtil.startMainService (getContext());
+                isEnable = true;
+            }else {
+                isEnable = false;
             }
         }
 
 
     }
 
-//    @Override
-//    protected void onResume() {
-//        super.onResume();
-//        LogE (TAG, "Main Resume");
-////        if (sharedPreferences != null) {
-////            mmRecordIncomingCalls = sharedPreferences.getBoolean (AppConstants.KEY_RECORD_INCOMING_CALLS, mmRecordIncomingCalls);
-////            mMRecordOutgoingCalls = sharedPreferences.getBoolean (AppConstants.KEY_RECORD_OUTGOING_CALLS, mMRecordOutgoingCalls);
-////        } else {
-////            try {
-////                sharedPreferences = getSharedPreferences (getString (R.string.app_name), Context.MODE_PRIVATE);
-////            } catch (Exception e) {
-////                LogE (TAG, e.getMessage ());
-////                LogE (TAG, e.toString ());
-////                e.printStackTrace ();
-////            }
-////            mmRecordIncomingCalls = sharedPreferences.getBoolean (AppConstants.KEY_RECORD_INCOMING_CALLS, mmRecordIncomingCalls);
-////            mMRecordOutgoingCalls = sharedPreferences.getBoolean (AppConstants.KEY_RECORD_OUTGOING_CALLS, mMRecordOutgoingCalls);
-////        }
-//    }
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (sharedPreferences != null) {
+            mRecordIncomingCalls = sharedPreferences.getBoolean (AppConstants.KEY_RECORD_INCOMING_CALLS, mRecordIncomingCalls);
+            mRecordOutgoingCalls = sharedPreferences.getBoolean (AppConstants.KEY_RECORD_OUTGOING_CALLS, mRecordOutgoingCalls);
+        } else {
+//
+            mRecordIncomingCalls = sharedPreferences.getBoolean (AppConstants.KEY_RECORD_INCOMING_CALLS, mRecordIncomingCalls);
+            mRecordOutgoingCalls = sharedPreferences.getBoolean (AppConstants.KEY_RECORD_OUTGOING_CALLS, mRecordOutgoingCalls);
+        }
+        isEnable = mRecordIncomingCalls;
+        binding.btnOnOffRecord.setChecked(isEnable);
+    }
 
 
     @Override

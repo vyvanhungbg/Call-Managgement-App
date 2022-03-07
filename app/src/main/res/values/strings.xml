@@ -16,7 +16,7 @@
     <string name="title_hello_fragment_home">Xin chào !</string>
     <string name="title_button_on_off_fragment_home">Bật ghi âm</string>
 
-<!--        fragment all call-->
+<!--    fragment all call-->
     <string name="title_textview_search_fragment_all_call">Tìm kiếm</string>
     <string name="title_textview_day_of_week_2">T2</string>
     <string name="title_textview_day_of_week_3">T3</string>
@@ -26,6 +26,32 @@
     <string name="title_textview_day_of_week_7">T7</string>
     <string name="title_textview_day_of_week_cn">CN</string>
 
+<!--    layout item call-->
+    <string name="title_textview_name_of_phone">Người dùng</string>
+    <string name="title_textview_sample_phone_number">0398xxxxxx</string>
+
+
+<!--    AllCallRecyclerAdapter-->
+    <string name="title_sub_menu_un_favorite">Bỏ yêu thích</string>
+    <string name="title_sub_menu_favorite">Yêu thích</string>
+    <string name="title_sub_menu_view_more">Xem chi tiết</string>
+    <string name="title_sub_menu_call_now">Gọi</string>
+    <string name="title_sub_menu_delete">Xoá đoạn ghi âm này</string>
+    <string name="title_incoming_call">Cuộc gọi đến</string>
+    <string name="title_outgoing_call">Cuộc gọi đi</string>
+<!--    menu sub (delete, make phone call ) dialog in  AllCallRecyclerAdapter-->
+    <string name="title_header_dialog_delete">Xoá đoạn ghi âm này !</string>
+    <string name="title_message_dialog_delete">"Bạn chắc chắn muốn xoá đoạn ghi âm này ? .Không thể phục hồi !"</string>
+    <string name="title_message_action_delete_success">Đã xoá đoạn ghi âm này !</string>
+    <string name="title_message_action_delete_failed">Không thể xoá đoạn ghi âm này !</string>
+    <string name="title_message_action_click_favorite_failed">Có lỗi xảy ra khi thích đoạn âm thanh này !</string>
+
+    <string name="title_header_action_make_phone_call_failed">Không thể gọi ! </string>
+    <string name="title_message_action_make_phone_call_failed">Số điện thoại không hợp lệ </string>
+
+
+
+<!--    ////-->
 
     <string name="recorder_header">Recorder</string>
 
@@ -54,9 +80,9 @@
     <!-- - Runtime permissions -->
 
 
-    <string name="unknown_number">Unknown</string>
-    <string name="yes">Yes</string>
-    <string name="no">No</string>
+    <string name="unknown_number">Người dùng</string>
+    <string name="yes">Đồng ý</string>
+    <string name="no">Không</string>
 
     <string name="incoming">Incoming</string>
     <string name="outgoing">Outgoing</string>
