@@ -35,7 +35,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
-
+import androidx.databinding.DataBindingUtil;
 
 
 import java.io.File;
@@ -47,6 +47,7 @@ import java.util.Locale;
 import java.util.Objects;
 import java.util.concurrent.TimeUnit;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import io.realm.Realm;
 import io.realm.Sort;
 
@@ -55,6 +56,7 @@ import static com.franky.callmanagement.utils.LogUtil.LogE;
 import static com.franky.callmanagement.utils.LogUtil.LogI;
 
 import com.franky.callmanagement.R;
+import com.franky.callmanagement.databinding.ActivityCallBinding;
 import com.franky.callmanagement.models.CallObject;
 import com.franky.callmanagement.utils.ResourceUtil;
 
@@ -63,21 +65,16 @@ import com.franky.callmanagement.utils.ResourceUtil;
  */
 public class CallActivity extends AppCompatActivity {
     private static final String TAG = CallActivity.class.getSimpleName ();
+    private ActivityCallBinding binding;
     private boolean mIsIncoming = false;
     private boolean mIsOutgoing = false;
     private Realm mRealm = null;
     private CallObject mIncomingCallObject = null;
     private CallObject mOutgoingCallObject = null;
     private MediaPlayer mMediaPlayer = null;
-   // private AdsRecoder adsRecoder;
     private ImageView playImageButton;
     private boolean adShowed = false;
-
-    /**
-     * Sets status bar gradiant.
-     *
-    // * @param activity the activity
-     */
+    private CircleImageView btnBack;
 
 
     @Override
@@ -85,62 +82,13 @@ public class CallActivity extends AppCompatActivity {
         super.onCreate (savedInstanceState);
         LogD (TAG, "Activity create");
         //setStatusBarGradiant (this);
-        setContentView (R.layout.activity_call);
-       // adsRecoder = new AdsRecoder (this);
-      //  adsRecoder.initBanner ();
-      //  adsRecoder.initInterstitial ();
-      //  Toolbar toolbar = findViewById (R.id.toolbar);
-//        toolbar.findViewById (R.id.appsetting).setVisibility (View.GONE);
-//        toolbar.findViewById (R.id.appsearch).setVisibility (View.GONE);
-//        toolbar.findViewById (R.id.sc_recordCalls).setVisibility (View.GONE);
-//        TextView title = toolbar.findViewById (R.id.toolbar_title);
-//        toolbar.findViewById (R.id.appback).setOnClickListener (view -> finish ());
-         playImageButton = findViewById (R.id.content_call_play_image_button);
-//        adsRecoder.getInterstitialAd ().setAdListener (new AdListener () {
-//            @Override
-//            public void onAdLoaded () {
-//                LogE (TAG, "onAdLoaded()");
-//            }
-//
-//            @Override
-//            public void onAdFailedToLoad (int errorCode) {
-//                if (!adShowed) {
-//                    adShowed = true;
-//                    LogE (TAG, "onAdFailedToLoad");
-//                }
-//            }
-//
-//            @Override
-//            public void onAdOpened () {
-//                LogE (TAG, "onAdOpened()");
-//            }
-//
-//            @Override
-//            public void onAdClicked () {
-//                LogE (TAG, "onAdClicked()");
-//            }
-//
-//            @Override
-//            public void onAdLeftApplication () {
-//                LogE (TAG, "onAdLeftApplication()");
-//            }
-//
-//            @Override
-//            public void onAdClosed () {
-//                LogE (TAG, "onAdClosed()");
-//                if (mMediaPlayer != null) {
-//                    if (mMediaPlayer.isPlaying ()) {
-//                        mMediaPlayer.pause ();
-//                        playImageButton.setImageResource (R.drawable.ic_play);
-//                    } else {
-//                        mMediaPlayer.start ();
-//                        playImageButton.setImageResource (R.drawable.ic_pause);
-//                    }
-//                } else {
-//                    playImageButton.setImageResource (R.drawable.ic_play);
-//                }
-//            }
-//        });
+        binding = DataBindingUtil.setContentView (this, R.layout.activity_call);
+
+        playImageButton = findViewById (R.id.content_call_play_image_button);
+        btnBack = findViewById(R.id.crimv_action_bar_back);
+        btnBack.setOnClickListener(view -> {
+            finish();
+        });
         Intent intent = getIntent ();
         long beginTimestamp = 0L, endTimestamp = 0L;
         if (intent != null) {
@@ -199,7 +147,7 @@ public class CallActivity extends AppCompatActivity {
         }
         if (intent.hasExtra ("mCorrespondentName")) {
             String correspondentName = intent.getStringExtra ("mCorrespondentName");
-            //title.setText (correspondentName);
+            binding.tvNameUser.setText(correspondentName);
             if (mIsIncoming) {
                 mIncomingCallObject.setCorrespondentName (correspondentName);
             }
@@ -278,7 +226,7 @@ public class CallActivity extends AppCompatActivity {
             }
           //  typeTextView.setText (getString (R.string.incoming_call_record));
             if (imageBitmap != null) {
-             //   typeImageView.setImageBitmap (imageBitmap);
+             binding.crimvImageOfUser.setImageBitmap (imageBitmap);
             } else {
               //  typeImageView.setImageDrawable (ResourceUtil.getDrawable (this, R.drawable.ic_incoming));
               //  typeImageView.setColorFilter (ContextCompat.getColor (getApplicationContext (), R.color.cp_6), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -330,8 +278,9 @@ public class CallActivity extends AppCompatActivity {
                     e.printStackTrace ();
                 }
             }
-            durationString = durationString != null && !durationString.isEmpty () ? durationString : "N/A";
-            ((TextView) findViewById (R.id.content_call_duration_text_view)).setText (durationString);
+            //durationString = durationString != null && !durationString.isEmpty () ? durationString : "N/A";
+            //((TextView) findViewById (R.id.content_call_duration_text_view)).setText (durationString);
+
         } else if (mIsOutgoing) {
             String phoneNumber = mOutgoingCallObject.getPhoneNumber ();
             Bitmap imageBitmap = null;
@@ -381,7 +330,7 @@ public class CallActivity extends AppCompatActivity {
             }
            // typeTextView.setText (getString (R.string.outgoing_call_record));
             if (imageBitmap != null) {
-               // typeImageView.setImageBitmap (imageBitmap);
+               binding.crimvImageOfUser.setImageBitmap (imageBitmap);
             } else {
               //  typeImageView.setImageDrawable (ResourceUtil.getDrawable (this, R.drawable.ic_outgoing));
               //  typeImageView.setColorFilter (ContextCompat.getColor (getApplicationContext (), R.color.cp_5), android.graphics.PorterDuff.Mode.SRC_IN);
@@ -433,8 +382,9 @@ public class CallActivity extends AppCompatActivity {
                     e.printStackTrace ();
                 }
             }
-            durationString = durationString != null && !durationString.isEmpty () ? durationString : "N/A";
-            ((TextView) findViewById (R.id.content_call_duration_text_view)).setText (durationString);
+           // durationString = durationString != null && !durationString.isEmpty () ? durationString : "N/A";
+          //  ((TextView) findViewById (R.id.content_call_duration_text_view)).setText (durationString);
+
         }
         TextView beginTimeDateTextView = findViewById (R.id.content_call_begin_time_date_text_view);
         beginTimeDateTextView.setText (beginTimeDate != null && !beginTimeDate.trim ().isEmpty () ? beginTimeDate : "N/A");

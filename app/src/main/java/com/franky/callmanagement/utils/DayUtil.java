@@ -15,6 +15,9 @@ public class DayUtil {
         T2, T3, T4, T5, T6, T7,CN;
     }
 
+
+    // Sử dụng binding cho layout ngày hiện tại
+
     @BindingAdapter("setIsDaySelected")
     public static void setIsDaySelected(View view ,int day) {
          Calendar calendar = Calendar.getInstance();
