@@ -259,7 +259,7 @@
 
 
             <TextView
-                android:id="@+id/content_call_number_text_view"
+                android:id="@+id/tv_phone_number_in_activity_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/number"
@@ -307,7 +307,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
-                android:id="@+id/content_call_begin_time_date_text_view"
+                android:id="@+id/tv_begin_time_date_in_activity_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/time_date"
@@ -356,7 +356,7 @@
                 app:layout_constraintBottom_toBottomOf="parent"/>
 
             <TextView
-                android:id="@+id/content_call_end_time_date_text_view"
+                android:id="@+id/tv_end_time_date_in_activity_call"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="@string/time_date"
