@@ -11,8 +11,8 @@ import androidx.core.content.res.ResourcesCompat;
 import androidx.preference.PreferenceViewHolder;
 import androidx.preference.SwitchPreferenceCompat;
 
-import com.franky.callmanagement.R;
 
+import com.franky.callmanagement.R;
 
 /**
  * The type Custom switch preference compat.
@@ -80,8 +80,8 @@ public class CustomSwitchPreferenceCompat extends SwitchPreferenceCompat {
 		Typeface typefaces = ResourcesCompat.getFont (context, R.font.lato_regular);
 		summary.setTypeface (typefaces);
 		summary.setPadding (context.getResources ().getDimensionPixelSize (R.dimen._16sdp), 0, 0, 0);
-		SwitchCompat switchCompat = (SwitchCompat) holder.findViewById (android.R.id.switch_widget);
-		switchCompat.setTrackResource (R.drawable.s_track_selector);
-		switchCompat.setThumbResource (R.drawable.s_thumb_selector);
+//		SwitchCompat switchCompat = (SwitchCompat) holder.findViewById (R.id.switchWidget);
+//		switchCompat.setTrackResource (R.drawable.s_track_selector);
+//		switchCompat.setThumbResource (R.drawable.s_thumb_selector);
 	}
 }

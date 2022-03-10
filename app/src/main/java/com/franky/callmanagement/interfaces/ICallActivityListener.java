@@ -7,4 +7,5 @@ public interface ICallActivityListener {
 
     void actionGetInComingObjectSuccess(boolean mIsIncoming, CallObject mIncomingCallObject);
     void actionGetOutgoingCallObjectSuccess(boolean mIsOutgoing, CallObject mOutgoingCallObject);
+    void actionDeleteCallObjectSuccess(String mess);
 }

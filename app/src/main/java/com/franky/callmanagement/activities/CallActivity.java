@@ -14,6 +14,7 @@ import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.LayerDrawable;
+import android.media.AudioManager;
 import android.media.MediaPlayer;
 import android.net.Uri;
 import android.os.Build;
@@ -72,7 +73,7 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
     private Realm mRealm = null;
     private MediaPlayer mMediaPlayer = null;
     private ImageView playImageButton;
-    private boolean adShowed = false;
+    private SeekBar playSeekBar;
     private CircleImageView btnBack;
 
     private CallActivityPresenter presenter;
@@ -85,11 +86,16 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
         init();
         binding = DataBindingUtil.setContentView (this, R.layout.activity_call);
 
-        playImageButton = findViewById (R.id.content_call_play_image_button);
+
+        playImageButton = findViewById (R.id.imgv_content_call_play_image_button);
+        playSeekBar = findViewById (R.id.sb_call_play_seek_bar);
         btnBack = findViewById(R.id.crimv_action_bar_back);
+
+
         btnBack.setOnClickListener(view -> {
             finish();
         });
+
         try {
             mRealm = Realm.getDefaultInstance ();
         } catch (Exception e) {
@@ -98,10 +104,6 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
         }
         Intent intent = getIntent ();
         presenter.getDataFromAllCallRecyclerAdapter(mRealm, intent);
-
-
-
-       // float mainMargin = getResources ().getDimension (R.dimen._16sdp);
 
     }
 
@@ -118,7 +120,6 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
         }
         if (path != null && !path.trim ().isEmpty ()) {
             if (exists && isFile) {
-                SeekBar playSeekBar = findViewById (R.id.content_call_play_seek_bar);
                 playSeekBar.setOnSeekBarChangeListener (new SeekBar.OnSeekBarChangeListener () {
                     @Override
                     public void onProgressChanged (SeekBar seekBar, int i, boolean b) {
@@ -138,8 +139,10 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
                     public void onStopTrackingTouch (SeekBar seekBar) {
                     }
                 });
-                TextView playTimeElapsedTextView = findViewById (R.id.content_call_play_time_elapsed);
-                TextView playTimeRemainingTextView = findViewById (R.id.content_call_play_time_remaining);
+
+                // set sự kiện onclick pause, stop
+                TextView playTimeElapsedTextView = findViewById (R.id.tv_content_call_play_time_elapsed);
+                TextView playTimeRemainingTextView = findViewById (R.id.tv_content_call_play_time_remaining);
                 playImageButton.setOnClickListener (view -> {
                     if (mMediaPlayer != null) {
                         if (mMediaPlayer.isPlaying ()) {
@@ -160,6 +163,7 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
                         if (b) {
                             if (mMediaPlayer != null) {
                                 mMediaPlayer.setVolume (i / 100f, i / 100f);
+                                LogE(TAG,"volume "+(i / 100f));
                             }
                             volumeSeekBar.setProgress (i);
                         }
@@ -197,7 +201,8 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
                     mMediaPlayer.setOnInfoListener ((mp, what, extra) -> false);
                     mMediaPlayer.setOnErrorListener ((mp, what, extra) -> false);
                     mMediaPlayer.seekTo (0);
-                    mMediaPlayer.setVolume (0.5f, 0.5f);
+                   // mMediaPlayer.setAudioStreamType(AudioManager.STREAM_VOICE_CALL);
+                    mMediaPlayer.setVolume (1.0f, 1.0f);
                     playSeekBar.setMax (mMediaPlayer.getDuration ());
                     Handler handler = new Handler ();
                     runOnUiThread (new Runnable () {
@@ -319,9 +324,9 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
         binding.tvBeginTimeDateInActivityCall.setText(beginTimeDate!=null? beginTimeDate : "N/A");
         binding.tvEndTimeDateInActivityCall.setText(endTimeDate!=null? endTimeDate : "N/A");
             // thời gian cuộc gọi
-            String durationTime = presenter.getTimeDurationCall(callObject);
+            String durationTime = presenter.getTimeDurationCall(callObject,this);
             if(durationTime != null ){
-                ///
+                binding.tvTimeDurationInActivityCall.setText(durationTime);
             }
         // set file record
         File file = null;
@@ -333,6 +338,13 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
             e.printStackTrace ();
         }
         getFileRecord(file);
+
+
+        // click button
+
+        binding.linLayoutMakeAMessageInActivityCall.setOnClickListener(view -> presenter.makeAMessage(callObject,this));
+        binding.linLayoutMakeAPhoneInActivityCall.setOnClickListener(view -> presenter.makeAPhoneCall(callObject,this));
+        binding.linLayoutButtonFavoriteInActivityCall.setOnClickListener(view -> presenter.actionDeleteThisItem(mRealm,callObject,this));
     }
 
     @Override
@@ -391,144 +403,11 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
                 .create ();
     }
 
-//    private void makePhoneCall (CallObject callObject) {
-//        LogI (TAG, "Make phone call");
-//        String phoneNumber = null;
-//        if (mIsIncoming && mIncomingCallObject != null) {
-//            phoneNumber = mIncomingCallObject.getPhoneNumber ();
-//        } else if (mIsOutgoing && mOutgoingCallObject != null) {
-//            phoneNumber = mOutgoingCallObject.getPhoneNumber ();
-//        }
-//        if (phoneNumber != null && !phoneNumber.trim ().isEmpty ()
-//                && ActivityCompat.checkSelfPermission (this, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-//            try {
-//                startActivity (new Intent (Intent.ACTION_DIAL, Uri.fromParts ("tel", phoneNumber, null)));
-//            } catch (Exception e) {
-//                LogE (TAG, e.getMessage ());
-//                LogE (TAG, e.toString ());
-//                e.printStackTrace ();
-//            }
-//        } else {
-//            new AlertDialog.Builder (this)
-//                    .setTitle ("Cannot make phone call")
-//                    .setMessage ("Making phone call to this correspondent is not possible.")
-//                    .setNeutralButton (android.R.string.ok, (dialogInterface, i) -> {
-//                        dialogInterface.dismiss ();
-//                    })
-//                    .create ().show ();
-//        }
-//    }
 
-//    private void delete () {
-//        LogI (TAG, "Delete");
-//        new AlertDialog.Builder (this)
-//                .setTitle ("Delete call recording")
-//                .setMessage ("Are you sure you want to delete this call recording (and its audio file)? Data cannot be recovered.")
-//                .setPositiveButton (R.string.yes, (dialogInterface, i) -> {
-//                    dialogInterface.dismiss ();
-//                    Realm realm = null;
-//                    try {
-//                        realm = Realm.getDefaultInstance ();
-//                    } catch (Exception e) {
-//                        LogE (TAG, e.getMessage ());
-//                        LogE (TAG, e.toString ());
-//                        e.printStackTrace ();
-//                    }
-//                    if (realm != null && !realm.isClosed ()) {
-//                        try {
-//                            realm.beginTransaction ();
-//                            if (mIsIncoming && mIncomingCallObject != null) {
-//                                CallObject incomingCallObject1 = realm.where (CallObject.class)
-//                                        .equalTo ("mBeginTimestamp", mIncomingCallObject.getBeginTimestamp ())
-//                                        .equalTo ("mEndTimestamp", mIncomingCallObject.getEndTimestamp ())
-//                                        .beginGroup ()
-//                                        .equalTo ("type", "incoming")
-//                                        .endGroup ()
-//                                        .findFirst ();
-//                                if (incomingCallObject1 != null) {
-//                                    File outputFile = null;
-//                                    try {
-//                                        outputFile = new File (incomingCallObject1.getOutputFile ());
-//                                    } catch (Exception e) {
-//                                        LogE (TAG, e.getMessage ());
-//                                        LogE (TAG, e.toString ());
-//                                        e.printStackTrace ();
-//                                    }
-//                                    if (outputFile != null) {
-//                                        if (outputFile.exists () && outputFile.isFile ()) {
-//                                            try {
-//                                                outputFile.delete ();
-//                                            } catch (Exception e) {
-//                                                LogE (TAG, e.getMessage ());
-//                                                LogE (TAG, e.toString ());
-//                                                e.printStackTrace ();
-//                                            }
-//                                        }
-//                                    }
-//                                    incomingCallObject1.deleteFromRealm ();
-//                                    realm.commitTransaction ();
-//                                    Toast.makeText (this, "Call recording is deleted", Toast.LENGTH_SHORT).show ();
-//                                    finish ();
-//                                } else {
-//                                    realm.cancelTransaction ();
-//                                    Toast.makeText (this, "Call recording is not deleted", Toast.LENGTH_SHORT).show ();
-//                                }
-//                            } else if (mIsOutgoing && mOutgoingCallObject != null) {
-//                                CallObject outgoingCallObject1 = realm.where (CallObject.class)
-//                                        .equalTo ("mBeginTimestamp", mOutgoingCallObject.getBeginTimestamp ())
-//                                        .equalTo ("mEndTimestamp", mOutgoingCallObject.getEndTimestamp ())
-//                                        .beginGroup ()
-//                                        .equalTo ("type", "outgoing")
-//                                        .endGroup ()
-//                                        .findFirst ();
-//                                if (outgoingCallObject1 != null) {
-//                                    File outputFile = null;
-//                                    try {
-//                                        outputFile = new File (outgoingCallObject1.getOutputFile ());
-//                                    } catch (Exception e) {
-//                                        LogE (TAG, e.getMessage ());
-//                                        LogE (TAG, e.toString ());
-//                                        e.printStackTrace ();
-//                                    }
-//                                    if (outputFile != null) {
-//                                        if (outputFile.exists () && outputFile.isFile ()) {
-//                                            try {
-//                                                outputFile.delete ();
-//                                            } catch (Exception e) {
-//                                                LogE (TAG, e.getMessage ());
-//                                                LogE (TAG, e.toString ());
-//                                                e.printStackTrace ();
-//                                            }
-//                                        }
-//                                    }
-//                                    outgoingCallObject1.deleteFromRealm ();
-//                                    realm.commitTransaction ();
-//                                    Toast.makeText (this, "Call recording is deleted", Toast.LENGTH_SHORT).show ();
-//                                    finish ();
-//                                } else {
-//                                    realm.cancelTransaction ();
-//                                    Toast.makeText (this, "Call recording is not deleted", Toast.LENGTH_SHORT).show ();
-//                                }
-//                            } else {
-//                                realm.cancelTransaction ();
-//                                Toast.makeText (this, "Call recording is not deleted", Toast.LENGTH_SHORT).show ();
-//                            }
-//                            realm.close ();
-//                        } catch (Exception e) {
-//                            LogE (TAG, e.getMessage ());
-//                            LogE (TAG, e.toString ());
-//                            e.printStackTrace ();
-//                        }
-//                    } else {
-//                        Toast.makeText (this, "Call recording is not deleted", Toast.LENGTH_SHORT).show ();
-//                    }
-//                })
-//                .setNegativeButton (R.string.no, (dialogInterface, i) -> dialogInterface.dismiss ())
-//                .create ().show ();
-//    }
 
     @Override
     public void actionGetIntentFailed(String mess) {
+        LogE(TAG,mess);
         getMissingDataDialog().show ();
     }
 
@@ -540,6 +419,11 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
     @Override
     public void actionGetOutgoingCallObjectSuccess(boolean mIsOutgoing, CallObject mOutgoingCallObject) {
         display(mOutgoingCallObject);
+    }
+
+    @Override
+    public void actionDeleteCallObjectSuccess(String mess) {
+        finish();
     }
 
 

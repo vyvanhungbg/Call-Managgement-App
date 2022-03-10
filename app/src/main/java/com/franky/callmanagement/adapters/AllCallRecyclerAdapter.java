@@ -218,8 +218,8 @@ public class AllCallRecyclerAdapter extends RecyclerView.Adapter<AllCallRecycler
     private boolean showItemMenuDialog (@NonNull Context context, @NonNull CallObject incomingCallObject, @NonNull String correspondent) {
         CharSequence[] menuItems = {
                  context.getString(R.string.title_sub_menu_view_more)
-                , context.getString(R.string.title_sub_menu_call_now)
-                ,incomingCallObject.isFavourit () ? context.getString(R.string.title_sub_menu_un_favorite) : context.getString(R.string.title_sub_menu_favorite)
+                , context.getString(R.string.title_call_now)
+                ,incomingCallObject.isFavourit () ? context.getString(R.string.title_un_favorite) : context.getString(R.string.title_favorite)
                 , context.getString(R.string.title_sub_menu_delete)
         };
 

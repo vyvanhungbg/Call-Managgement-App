@@ -32,10 +32,11 @@
 
 
 <!--    AllCallRecyclerAdapter-->
-    <string name="title_sub_menu_un_favorite">Bỏ yêu thích</string>
-    <string name="title_sub_menu_favorite">Yêu thích</string>
+    <string name="title_un_favorite">Bỏ yêu thích</string>
+    <string name="title_favorite">Yêu thích</string>
     <string name="title_sub_menu_view_more">Xem chi tiết</string>
-    <string name="title_sub_menu_call_now">Gọi</string>
+    <string name="title_call_now">Gọi điện</string>
+    <string name="title_message_now">Nhắn tin</string>
     <string name="title_sub_menu_delete">Xoá đoạn ghi âm này</string>
     <string name="title_incoming_call">Cuộc gọi đến</string>
     <string name="title_outgoing_call">Cuộc gọi đi</string>
@@ -48,6 +49,17 @@
 
     <string name="title_header_action_make_phone_call_failed">Không thể gọi ! </string>
     <string name="title_message_action_make_phone_call_failed">Số điện thoại không hợp lệ </string>
+
+    <string name="title_header_action_make_a_message_failed">Không thể gửi tin nhắn ! </string>
+    <string name="title_message_action_make_a_message_failed">Số điện thoại không hợp lệ </string>
+
+
+<!--    call activity-->
+    <string name="title_tv_end_time_date_in_activity_call">Kết thúc lúc</string>
+    <string name="title_tv_begin_time_date_in_activity_call">Bắt đầu lúc</string>
+    <string name="title_tv_phone_number_in_activity_call">Số điện thoại</string>
+    <string name="title_tv_time_duration_in_activity_call">Thời luợng</string>
+
 
 
 
@@ -101,4 +113,8 @@
     <string name="time_date">Time - Date</string>
     <string name="date_time">Date - Time</string>
     <string name="duration">Duration</string>
+
+
+<!--    //format-->
+    <string name="format_duration">%d phút, %d giây</string>
 </resources>

@@ -116,7 +116,7 @@
             <ImageButton
                 android:id="@+id/imb_item_menu_in_item_call"
                 android:layout_width="24dp"
-                android:layout_height="24dp"
+                android:layout_height="match_parent"
                 android:layout_gravity="center"
                 android:src="@drawable/ic_menu_dots_24"
                 android:alpha=".5"
