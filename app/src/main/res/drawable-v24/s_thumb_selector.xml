@@ -18,7 +18,7 @@
             android:shape="rectangle"
             android:useLevel="false"
             android:visible="true">
-            <solid android:color="@color/white" />
+            <solid android:color="@color/gray_200" />
             <corners android:radius="@dimen/_100sdp" />
             <size android:width="@dimen/_16sdp" android:height="@dimen/_16sdp" />
             <stroke android:width="@dimen/_4sdp" android:color="#0000ffff" />

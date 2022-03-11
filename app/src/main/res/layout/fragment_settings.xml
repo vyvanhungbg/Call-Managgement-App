@@ -1,17 +1,116 @@
 <?xml version="1.0" encoding="utf-8"?>
 <layout xmlns:android="http://schemas.android.com/apk/res/android">
     <FrameLayout
+        xmlns:app="http://schemas.android.com/apk/res-auto"
         xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         tools:context=".fragments.SettingsFragment">
 
         <!-- TODO: Update blank fragment layout -->
-        <FrameLayout
-            android:id="@+id/settings"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            />
+            android:orientation="vertical">
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="140dp"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="@dimen/_8sdp">
+                <RelativeLayout
+                    android:paddingTop="30dp"
+                    android:paddingBottom="18dp"
+                    android:paddingRight="12dp"
+                    android:paddingLeft="12dp"
+                    android:layout_width="match_parent"
+                    android:layout_height="140dp"
+                    android:background="@drawable/bg_background_header_toolbar"
+                    >
+                    <LinearLayout
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentLeft="true"
+                        android:orientation="horizontal">
+                        <FrameLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="80dp">
+                            <de.hdodenhof.circleimageview.CircleImageView
+                                android:id="@+id/imgv_avatar_user_in_account_frg"
+                                android:layout_width="70dp"
+                                android:layout_height="70dp"
+                                android:layout_gravity="center|top"
+                                android:elevation="1dp"
+
+                                app:civ_border_width="2dp"
+                                app:civ_border_color="@color/black"
+                                android:src="@drawable/ic_baseline_account_circle_24">
+                            </de.hdodenhof.circleimageview.CircleImageView>
+                            <TextView
+                                android:layout_width="wrap_content"
+                                android:layout_height="wrap_content"
+                                android:layout_gravity="bottom|right"
+                                android:text="Sửa"
+                                android:translationZ="10dp"
+                                android:textStyle="bold">
+                            </TextView>
+                        </FrameLayout>
+                        <LinearLayout
+                            android:layout_width="wrap_content"
+                            android:layout_height="80dp"
+                            android:orientation="vertical"
+                            android:gravity="left|center"
+                            android:padding="5dp"
+                            android:layout_marginLeft="7dp">
+                            <TextView
+                                android:id="@+id/tv_name_user_in_frg_acc"
+                                android:layout_width="wrap_content"
+                                android:layout_height="30dp"
+                                android:layout_gravity="left|center"
+                                android:gravity="left|center"
+                                android:text="Vy Văn Hùng"
+                                android:textStyle="bold"
+                                android:textSize="18sp"
+                                android:visibility="gone"
+                                android:layout_marginBottom="3dp"
+                                >
+                            </TextView>
+
+                            <TextView
+                                android:id="@+id/tv_login_in_frg_acc"
+                                android:layout_width="match_parent"
+                                android:layout_height="28dp"
+                                android:layout_marginLeft="5dp"
+                                android:layout_marginRight="5dp"
+                                android:padding="2dp"
+                                android:textStyle="bold"
+                                android:gravity="center"
+                                android:textSize="18sp"
+                                android:text="@string/title_textview_name_of_phone">
+                            </TextView>
+
+                        </LinearLayout>
+                    </LinearLayout>
+                    <ImageView
+                        android:layout_width="30dp"
+                        android:layout_height="30dp"
+                        android:layout_alignParentBottom="true"
+                        android:layout_alignParentRight="true"
+                        android:src="@drawable/ic_baseline_settings_24">
+                    </ImageView>
+                </RelativeLayout>
+            </androidx.cardview.widget.CardView>
+
+            <ScrollView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent">
+                <FrameLayout
+                    android:id="@+id/settings"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/_500sdp"
+                    />
+            </ScrollView>
+        </LinearLayout>
 
     </FrameLayout>
 </layout>

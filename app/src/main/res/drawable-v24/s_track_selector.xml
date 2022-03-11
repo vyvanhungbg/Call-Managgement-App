@@ -6,7 +6,7 @@
             android:shape="rectangle"
             android:useLevel="false"
             android:visible="true">
-            <solid android:color="@color/cp_1" />
+            <solid android:color="@color/main_color" />
             <corners android:radius="@dimen/_8sdp" />
 
             <size

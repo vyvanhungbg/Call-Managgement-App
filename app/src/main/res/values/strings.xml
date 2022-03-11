@@ -34,6 +34,7 @@
 <!--    AllCallRecyclerAdapter-->
     <string name="title_un_favorite">Bỏ yêu thích</string>
     <string name="title_favorite">Yêu thích</string>
+    <string name="title_delete">Xoá</string>
     <string name="title_sub_menu_view_more">Xem chi tiết</string>
     <string name="title_call_now">Gọi điện</string>
     <string name="title_message_now">Nhắn tin</string>
@@ -67,19 +68,19 @@
 
     <string name="recorder_header">Recorder</string>
 
-    <string name="preferred_audio_source">Preferred audio source</string>
-    <string name="preferred_output_format">Preferred output format</string>
-    <string name="preferred_audio_encoder">Preferred audio encoder</string>
+    <string name="preferred_audio_source">Nguồn ghi âm thanh</string>
+    <string name="preferred_output_format">Định dạnh âm thanh ghi</string>
+    <string name="preferred_audio_encoder">Mã hoá âm thanh ghi</string>
 
-    <string name="vibrate">Vibrate</string>
-    <string name="vibrate_description">On start &amp; stop recording.</string>
+    <string name="vibrate">Cảnh báo rung</string>
+    <string name="vibrate_description">Khi bắt đầu và dừng ghi</string>
 
-    <string name="turn_on_speaker">Turn on speaker</string>
+    <string name="turn_on_speaker">Bật loa ngoài</string>
     <string name="turn_on_speaker_description"></string>
 
-    <string name="max_up_volume">Max up volume</string>
-    <string name="max_up_volume_description">This will improve audio quality.</string>
-    <string name="records_output_location_title">Records output location</string>
+    <string name="max_up_volume">Cải thiện âm thanh ghi</string>
+    <string name="max_up_volume_description">Cải thiện chất lượng và độ lớn âm thanh khi ghi</string>
+    <string name="records_output_location_title">Vị trí tệp ghi</string>
 
     <!-- Service -->
     <string name="service">Service</string>
