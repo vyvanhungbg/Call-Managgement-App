@@ -223,7 +223,7 @@ public class CallRecorderService extends Service {
                                     .equalTo ("mPhoneNumber", phoneStateIncomingNumber)
                                     .findFirst ();
                             if (object != null) {
-                                favorite = object.isFavourit ();
+                                favorite = object.isFavourite ();
                                 realmf.commitTransaction ();
                             } else {
                                 realmf.cancelTransaction ();
@@ -538,7 +538,7 @@ public class CallRecorderService extends Service {
                             incomingCallObject.setAudioEncoder (finalAudioEncoder);
                             incomingCallObject.setOutputFile (finalOutputFilePath);
                             incomingCallObject.setType ("incoming");
-                            incomingCallObject.setFavourit (favorite);
+                            incomingCallObject.setFavourite (favorite);
                         }
                     });
                 }
@@ -562,7 +562,7 @@ public class CallRecorderService extends Service {
                             outgoingCallObject.setAudioEncoder (finalAudioEncoder);
                             outgoingCallObject.setOutputFile (finalOutputFilePath);
                             outgoingCallObject.setType ("outgoing");
-                            outgoingCallObject.setFavourit (favorite);
+                            outgoingCallObject.setFavourite (favorite);
                         }
                     });
                 }

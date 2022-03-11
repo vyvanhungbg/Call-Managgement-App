@@ -202,7 +202,7 @@ public class AllCallRecyclerAdapter extends RecyclerView.Adapter<AllCallRecycler
                     }
 
                     itemViewHolder.tvPhoneNumber.setText (String.valueOf (callObject.getPhoneNumber ()));
-                    if (callObject.isFavourit ()) {
+                    if (callObject.isFavourite ()) {
                         itemViewHolder.imvFavourite.setImageResource (R.drawable.ic_favorite);
                     } else {
                         itemViewHolder.imvFavourite.setImageResource (R.drawable.ic_favourit_stroke);
@@ -219,7 +219,7 @@ public class AllCallRecyclerAdapter extends RecyclerView.Adapter<AllCallRecycler
         CharSequence[] menuItems = {
                  context.getString(R.string.title_sub_menu_view_more)
                 , context.getString(R.string.title_call_now)
-                ,incomingCallObject.isFavourit () ? context.getString(R.string.title_un_favorite) : context.getString(R.string.title_favorite)
+                ,incomingCallObject.isFavourite () ? context.getString(R.string.title_un_favorite) : context.getString(R.string.title_favorite)
                 , context.getString(R.string.title_sub_menu_delete)
         };
 
@@ -359,7 +359,7 @@ public class AllCallRecyclerAdapter extends RecyclerView.Adapter<AllCallRecycler
                         .findAll ();
                 if (incomingCallObjects != null) {
                     for (CallObject callObject : incomingCallObjects) {
-                        callObject.setFavourit (!incomingCallObject.isFavourit ());
+                        callObject.setFavourite (!incomingCallObject.isFavourite ());
                     }
                     realmf.commitTransaction ();
                 } else {

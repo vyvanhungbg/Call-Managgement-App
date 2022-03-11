@@ -100,33 +100,8 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
                     list.add (incomingCallObject);
                 }
             }
-            list.get (list.size () - 1).setIsLastInCategory (true);
 
         }
-//        if (!callObjectList.isEmpty ()) {
-//            calendar.setTime (new Date (callObjectList.get (0).getBeginTimestamp ()));
-//            if (calendar.get (Calendar.DAY_OF_YEAR) == yesterdayDayOfYear) {
-//                hasYesterday = true;
-//            }
-//            if (hasYesterday) {
-//                list.add (new CallObject (true, context.getString (R.string.yesterday)));
-//                for (Iterator<CallObject> iterator = callObjectList.iterator () ; iterator.hasNext () ; ) {
-//                    CallObject incomingCallObject = iterator.next ();
-//                    calendar.setTime (new Date (incomingCallObject.getBeginTimestamp ()));
-//                    if (calendar.get (Calendar.DAY_OF_YEAR) == yesterdayDayOfYear) {
-//                        iterator.remove ();
-//                        list.add (incomingCallObject);
-//                    } else {
-//                        break;
-//                    }
-//                }
-//                list.get (list.size () - 1).setIsLastInCategory (true);
-//            }
-//        }
-//        if (!callObjectList.isEmpty ()) {
-//            list.add (new CallObject (true, context.getString (R.string.older)));
-//            list.addAll (callObjectList);
-//        }
 
         try {
             if (ActivityCompat.checkSelfPermission (getContext(), Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {

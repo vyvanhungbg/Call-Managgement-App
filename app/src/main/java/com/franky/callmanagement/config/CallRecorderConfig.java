@@ -6,28 +6,16 @@ import android.os.Build;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * The type Call recorder config.
- */
+
 public class CallRecorderConfig {
-    /**
-     * The constant CALL_RECORDER_DEFAULT_AUDIO_SOURCE.
-     */
+
     public static final int CALL_RECORDER_DEFAULT_AUDIO_SOURCE = getAudioSources ().get (0);
-    /**
-     * The constant CALL_RECORDER_DEFAULT_OUTPUT_FORMAT.
-     */
+
     public static final int CALL_RECORDER_DEFAULT_OUTPUT_FORMAT = getOutputFormats ().get (0);
-    /**
-     * The constant CALL_RECORDER_DEFAULT_AUDIO_ENCODER.
-     */
+
     public static final int CALL_RECORDER_DEFAULT_AUDIO_ENCODER = getAudioEncoders ().get (0);
 
-    /**
-     * Gets audio sources.
-     *
-     * @return the audio sources
-     */
+
     public static List<Integer> getAudioSources () {
         List<Integer> list = new ArrayList<> ();
         list.add (MediaRecorder.AudioSource.VOICE_CALL);
@@ -38,11 +26,7 @@ public class CallRecorderConfig {
         return list;
     }
 
-    /**
-     * Gets output formats.
-     *
-     * @return the output formats
-     */
+
     public static List<Integer> getOutputFormats () {
         List<Integer> list = new ArrayList<> ();
         list.add (MediaRecorder.OutputFormat.MPEG_4);
@@ -60,11 +44,7 @@ public class CallRecorderConfig {
         return list;
     }
 
-    /**
-     * Gets audio encoders.
-     *
-     * @return the audio encoders
-     */
+
     public static List<Integer> getAudioEncoders () {
         List<Integer> list = new ArrayList<> ();
         list.add (MediaRecorder.AudioEncoder.AAC);
