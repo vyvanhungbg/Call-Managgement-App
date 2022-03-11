@@ -30,6 +30,7 @@
         <entry key="app/src/main/res/drawable/custom_time_line_rounded.xml" value="0.1415" />
         <entry key="app/src/main/res/drawable/custom_time_line_selected.xml" value="0.1415" />
         <entry key="app/src/main/res/drawable/custom_toolbar_rounded.xml" value="0.164" />
+        <entry key="app/src/main/res/drawable/ic_application.xml" value="0.1335" />
         <entry key="app/src/main/res/drawable/ic_baseline_call_end_8.xml" value="0.1355" />
         <entry key="app/src/main/res/drawable/ic_baseline_delete_24.xml" value="0.164" />
         <entry key="app/src/main/res/drawable/ic_baseline_favorite_8.xml" value="0.1355" />
@@ -52,7 +53,7 @@
         <entry key="app/src/main/res/layout/border_shadow.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/content_call.xml" value="0.19630192502532928" />
         <entry key="app/src/main/res/layout/custom_switch_preferences_compat.xml" value="0.1640625" />
-        <entry key="app/src/main/res/layout/fragment_all_call.xml" value="0.33841886269070737" />
+        <entry key="app/src/main/res/layout/fragment_all_call.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_call_statistics.xml" value="0.17239583333333333" />
         <entry key="app/src/main/res/layout/fragment_home.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_settings.xml" value="0.14" />
@@ -60,6 +61,7 @@
         <entry key="app/src/main/res/layout/test.xml" value="0.25" />
         <entry key="app/src/main/res/layout/toolbar.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/menu/bottom_navigation_bar.xml" value="0.33541666666666664" />
+        <entry key="app/src/main/res/mipmap-anydpi-v26/ic_launcher.xml" value="0.164" />
         <entry key="app/src/main/res/xml/preferences.xml" value="0.25" />
       </map>
     </option>

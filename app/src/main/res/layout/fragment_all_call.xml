@@ -69,10 +69,10 @@
                         app:layout_constraintRight_toRightOf="parent"
                         app:layout_constraintBottom_toBottomOf="parent"
                         android:background="@drawable/custom_search_view"
-                        android:focusedByDefault="true"
+
                         app:defaultQueryHint="Nhập số điện thoại hoăc tên"
                         app:layout_constraintTop_toTopOf="parent"
-                        android:drawableLeft="@drawable/ic_baseline_search_24"/>
+                        android:drawableStart="@drawable/ic_baseline_search_24"/>
 
                     <ImageView
                         android:id="@+id/imgv_filter"
@@ -320,7 +320,7 @@
 <!--            button change timeline-->
        <androidx.cardview.widget.CardView
            android:layout_width="match_parent"
-           android:layout_height="50dp"
+           android:layout_height="@dimen/_35sdp"
            app:layout_constraintLeft_toLeftOf="parent"
            app:layout_constraintRight_toRightOf="parent"
            app:layout_constraintBottom_toBottomOf="parent"
@@ -330,13 +330,13 @@
            >
            <RelativeLayout
                android:layout_width="match_parent"
-               android:layout_height="50dp"
+               android:layout_height="match_parent"
                android:background="@drawable/custom_navigate_time_line_rounded">
 
                <ImageButton
                    android:id="@+id/btn_previous_time_line"
                    android:layout_width="65dp"
-                   android:layout_height="50dp"
+                   android:layout_height="match_parent"
                    android:layout_alignParentLeft="true"
                    android:background="@drawable/custom_button_next_previous_rounded"
                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
@@ -355,7 +355,7 @@
                <ImageButton
                    android:id="@+id/btn_next_time_line"
                    android:layout_width="65dp"
-                   android:layout_height="50dp"
+                   android:layout_height="match_parent"
                    android:layout_alignParentRight="true"
                    android:foreground="?android:attr/selectableItemBackgroundBorderless"
                    android:background="@drawable/custom_button_next_previous_rounded"

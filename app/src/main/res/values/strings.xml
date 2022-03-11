@@ -14,7 +14,8 @@
 
 <!--    fragment home-->
     <string name="title_hello_fragment_home">Xin chào !</string>
-    <string name="title_button_on_off_fragment_home">Bật ghi âm</string>
+    <string name="title_button_off_fragment_home">Bật ghi âm</string>
+    <string name="title_button_on__fragment_home">Đang ghi âm</string>
 
 <!--    fragment all call-->
     <string name="title_textview_search_fragment_all_call">Tìm kiếm</string>
@@ -62,7 +63,9 @@
     <string name="title_tv_time_duration_in_activity_call">Thời luợng</string>
 
 
-
+<!--    call recorder serviece-->
+    <string name="title_notification">Đang chạy....</string>
+    <string name="title_detail_notification">Call Management sẽ tự ghi âm các cuộc gọi !</string>
 
 <!--    ////-->
 

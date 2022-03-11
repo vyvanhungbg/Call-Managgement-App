@@ -87,7 +87,7 @@ public class CallRecorderService extends Service {
             e.printStackTrace ();
         }
         if (notificationManager != null) {
-            CharSequence contentTitle = "Recording...", contentText = "Call recording is currently in progress.";
+            CharSequence contentTitle = getString(R.string.title_notification), contentText = getString(R.string.title_detail_notification);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 try {
                     notificationChannel = new NotificationChannel (getString (R.string.service) + "-" + FOREGROUND_NOTIFICATION_ID, getString (R.string.service), NotificationManager.IMPORTANCE_NONE);
@@ -105,7 +105,7 @@ public class CallRecorderService extends Service {
                         e.printStackTrace ();
                     }
                     Icon logoIcon = Icon.createWithResource (this, R.drawable.ic_stat_name);
-                    Icon largeIcon = Icon.createWithResource (this, R.mipmap.ic_launcher);
+                    Icon largeIcon = Icon.createWithResource (this, R.drawable.ic_application);
                     try {
                         startForeground (FOREGROUND_NOTIFICATION_ID, new Notification.Builder (this, getString (R.string.service) + "-" + FOREGROUND_NOTIFICATION_ID)
                                 .setSmallIcon (logoIcon)

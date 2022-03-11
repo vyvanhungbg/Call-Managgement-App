@@ -69,6 +69,7 @@ public class HomeFragment extends Fragment {
         // Inflate the layout for this fragment
         binding =  DataBindingUtil.inflate(inflater,R.layout.fragment_home, container, false);
         binding.btnOnOffRecord.setChecked(isEnable);
+        setIconRecord(isEnable);
         binding.btnOnOffRecord.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
@@ -87,11 +88,17 @@ public class HomeFragment extends Fragment {
                 if (mRecordOutgoingCalls && !MainService.isServiceRunning) {
                     AppUtil.startMainService (getContext());
                 }
+                setIconRecord(isEnable);
             }
         });
 
 
         return binding.getRoot();
+    }
+
+    public void setIconRecord(boolean isEnable){
+        binding.imgvMicro.setImageDrawable(ContextCompat.getDrawable(getContext(),isEnable ? R.drawable.ic_baseline_mic_24 : R.drawable.ic_baseline_mic_off_24));
+        binding.tvTitleOnOfInFragmentHome.setText(getString(isEnable ? R.string.title_button_on__fragment_home:R.string.title_button_off_fragment_home ));
     }
 
     public void getSharedPrefers(){
@@ -140,6 +147,7 @@ public class HomeFragment extends Fragment {
         }
         isEnable = mRecordIncomingCalls;
         binding.btnOnOffRecord.setChecked(isEnable);
+        setIconRecord(isEnable);
     }
 
 
