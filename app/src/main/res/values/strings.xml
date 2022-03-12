@@ -31,6 +31,10 @@
     <string name="title_textview_name_of_phone">Người dùng</string>
     <string name="title_textview_sample_phone_number">0398xxxxxx</string>
 
+<!--    fragment call statistics-->
+    <string name="title_textview_all_call">Tất cả</string>
+    <string name="title_textview_coming_call">Gọi đến</string>
+    <string name="title_textview_outgoing_call">Gọi đi</string>
 
 <!--    AllCallRecyclerAdapter-->
     <string name="title_un_favorite">Bỏ yêu thích</string>

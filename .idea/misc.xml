@@ -21,8 +21,11 @@
         <entry key="app/src/main/res/drawable/bg_play_pause.xml" value="0.164" />
         <entry key="app/src/main/res/drawable/bg_srceen.xml" value="0.164" />
         <entry key="app/src/main/res/drawable/border_shadow.xml" value="0.164" />
+        <entry key="app/src/main/res/drawable/custom_background_tab_layout_normal.xml" value="0.1335" />
+        <entry key="app/src/main/res/drawable/custom_background_tab_layout_selected.xml" value="0.1335" />
         <entry key="app/src/main/res/drawable/custom_button_next_previous_rounded.xml" value="0.174" />
         <entry key="app/src/main/res/drawable/custom_button_record.xml" value="0.181" />
+        <entry key="app/src/main/res/drawable/custom_layout_container_tab_layout.xml" value="0.1335" />
         <entry key="app/src/main/res/drawable/custom_navigate_time_line_rounded.xml" value="0.174" />
         <entry key="app/src/main/res/drawable/custom_seach_view.xml" value="0.1415" />
         <entry key="app/src/main/res/drawable/custom_thumb.xml" value="0.151" />
@@ -52,6 +55,7 @@
         <entry key="app/src/main/res/layout/banner.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/border_shadow.xml" value="0.21822916666666667" />
         <entry key="app/src/main/res/layout/content_call.xml" value="0.19630192502532928" />
+        <entry key="app/src/main/res/layout/custom_layout_container_tab_layout.xml" value="0.22" />
         <entry key="app/src/main/res/layout/custom_switch_preferences_compat.xml" value="0.1640625" />
         <entry key="app/src/main/res/layout/fragment_all_call.xml" value="0.25" />
         <entry key="app/src/main/res/layout/fragment_call_statistics.xml" value="0.17239583333333333" />
