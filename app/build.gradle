@@ -30,6 +30,9 @@ android {
         enabled true
     }
 }
+repositories {
+    maven { url 'https://jitpack.io' }
+}
 
 dependencies {
 
@@ -49,4 +52,7 @@ dependencies {
 
     implementation 'androidx.preference:preference:1.1.1'
     implementation 'androidx.multidex:multidex:2.0.1'
+
+    // draw char
+    implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
 }

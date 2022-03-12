@@ -1,73 +1,115 @@
 <?xml version="1.0" encoding="utf-8"?>
-<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    tools:context=".fragments.CallStatisticsFragment">
-
-    <androidx.constraintlayout.widget.ConstraintLayout
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
+    <FrameLayout
+        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_margin="@dimen/_12sdp">
+        xmlns:app="http://schemas.android.com/apk/res-auto"
+        tools:context=".fragments.CallStatisticsFragment">
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/gl_horizontal_1"
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.12"/>
+            android:layout_height="match_parent"
+            >
 
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/gl_horizontal_2"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.2"/>
-
-        <androidx.constraintlayout.widget.Guideline
-            android:id="@+id/gl_horizontal_3"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            app:layout_constraintGuide_percent="0.8"/>
-
-
-<!--        header-->
-        <LinearLayout
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            app:layout_constraintLeft_toRightOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            android:orientation="vertical">
-            <TextView
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_horizontal_1"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/small_font"
-                android:text="@string/title_hello_fragment_home"
-                android:textColor="@color/black"/>
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.12"/>
 
-            <TextView
-                android:id="@+id/tv_username"
-                android:layout_width="wrap_content"
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_horizontal_2"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:textSize="@dimen/large_font"
-                android:textStyle="bold"
-                android:text="@string/owner"
-                android:textColor="@color/black"/>
-        </LinearLayout>
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.2"/>
 
-        <RelativeLayout
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/_50sdp"
-            app:layout_constraintTop_toBottomOf="@id/gl_horizontal_1">
-
-            <include layout="@layout/custom_layout_container_tab_layout" />
+            <androidx.constraintlayout.widget.Guideline
+                android:id="@+id/gl_horizontal_3"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                app:layout_constraintGuide_percent="0.8"/>
 
 
-        </RelativeLayout>
+            <!--        header-->
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:layout_constraintLeft_toRightOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:orientation="vertical">
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/small_font"
+                    android:text="@string/title_hello_fragment_home"
+                    android:textColor="@color/black"/>
+
+                <TextView
+                    android:id="@+id/tv_username"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:textSize="@dimen/large_font"
+                    android:textStyle="bold"
+                    android:text="@string/owner"
+                    android:textColor="@color/black"/>
+            </LinearLayout>
+
+            <RelativeLayout
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/_50sdp"
+                app:layout_constraintTop_toBottomOf="@id/gl_horizontal_1"
+                app:layout_constraintBottom_toTopOf="@id/gl_horizontal_2">
+
+                <include layout="@layout/custom_layout_container_tab_layout" />
+
+            </RelativeLayout>
+
+<!--            combinend char -->
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+
+                android:layout_margin="@dimen/_8sdp"
+                app:layout_constraintTop_toBottomOf="@id/gl_horizontal_2"
+                app:layout_constraintBottom_toTopOf="@id/gl_horizontal_3"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="5dp"
+                app:cardPreventCornerOverlap="false">
+                <com.github.mikephil.charting.charts.CombinedChart
+                    android:id="@+id/combinedChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_marginTop="20dp"/>
+
+            </androidx.cardview.widget.CardView>
+
+<!--            // horizontal char-->
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+
+                android:layout_margin="@dimen/_8sdp"
+                app:layout_constraintTop_toBottomOf="@id/gl_horizontal_3"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="5dp"
+                app:cardPreventCornerOverlap="false">
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/horizontalBarChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+
+            </androidx.cardview.widget.CardView>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-</FrameLayout>
+
+    </FrameLayout>
+</layout>

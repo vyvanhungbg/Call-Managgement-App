@@ -503,6 +503,15 @@ public class CallRecorderService extends Service {
                 e.printStackTrace ();
 
                 /// Android 11 bị lỗi chức năng này
+
+                simSerialNumber = Settings.Secure.getString(getApplicationContext().getContentResolver(),
+                        Settings.Secure.ANDROID_ID);
+                simOperator = "-";
+                simOperatorName = "-";
+                simCountryIso = "-";
+                networkOperator = "-";
+                networkOperatorName = "-";
+                networkCountryIso = "-";
             }
         }
         if (realm != null && !realm.isClosed ()) {

@@ -10,6 +10,16 @@
         <item>app_internal</item>
     </string-array>
 
+    <string-array name="title_name_day_of_week">
+        <item>T2</item>
+        <item>T3</item>
+        <item>T4</item>
+        <item>T5</item>
+        <item>T6</item>
+        <item>T7</item>
+        <item>CN</item>
+    </string-array>
+
     <!-- //// -->
 
     <string-array name="preferred_audio_source_entries">
