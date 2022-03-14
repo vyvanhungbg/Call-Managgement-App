@@ -16,6 +16,8 @@ import android.widget.Toast;
 
 import com.franky.callmanagement.R;
 import com.franky.callmanagement.databinding.FragmentCallStatisticsBinding;
+import com.franky.callmanagement.interfaces.ICallStatisticsListener;
+import com.franky.callmanagement.presenters.CallStatisticsPresenter;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.components.AxisBase;
@@ -39,6 +41,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
+import java.util.Objects;
 
 
 /**
@@ -46,9 +49,9 @@ import java.util.List;
  * Use the {@link CallStatisticsFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CallStatisticsFragment extends Fragment implements View.OnClickListener {
+public class CallStatisticsFragment extends Fragment implements View.OnClickListener , ICallStatisticsListener {
 
-
+    private CallStatisticsPresenter presenter;
     ColorStateList def;
     TextView item1;
     TextView item2;
@@ -79,6 +82,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_call_statistics, container, false);
+        init();
         item1 = view.findViewById(R.id.item1);
         item2 = view.findViewById(R.id.item2);
         item3 = view.findViewById(R.id.item3);
@@ -96,8 +100,12 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        createCombinedChart();
+        presenter.getDataForCombinedChart(requireContext());
         createHorizontalBarChart();
+    }
+
+    public void init(){
+        presenter = new CallStatisticsPresenter(this);
     }
 
     public void createHorizontalBarChart(){
@@ -184,88 +192,10 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
     }
 
 
-    public void createCombinedChart(){
-        combinedChart.animateXY(1500,2000);
-        combinedChart.setPinchZoom(true);
-        combinedChart.getDescription().setEnabled(false);
-        combinedChart.setBackgroundColor(Color.WHITE);
-        combinedChart.setDrawGridBackground(false);
-        combinedChart.setDrawBarShadow(false);
-        combinedChart.setHighlightFullBarEnabled(false);
-        combinedChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
-            @Override
-            public void onValueSelected(Entry e, Highlight h) {
-                Toast.makeText(getContext(), "Value: "
-                        + e.getY()
-                        + ", index: "
-                        + h.getX()
-                        + ", DataSet index: "
-                        + h.getDataSetIndex(), Toast.LENGTH_SHORT).show();
-            }
-
-            @Override
-            public void onNothingSelected() {
-
-            }
-        });
-
-        YAxis rightAxis = combinedChart.getAxisRight();
-        rightAxis.setDrawGridLines(false);
-        rightAxis.setAxisMinimum(0f);
-
-        YAxis leftAxis = combinedChart.getAxisLeft();
-        leftAxis.setDrawGridLines(false);
-        leftAxis.setAxisMinimum(0f);
-
-        final List<String> xLabel = Arrays.asList(getResources().getStringArray(R.array.title_name_day_of_week));
 
 
-        XAxis xAxis = combinedChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setAxisMinimum(0f);
-        xAxis.setGranularity(1f);
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(xLabel));
 
-        CombinedData data = new CombinedData();
-        LineData lineDatas = new LineData();
-        lineDatas.addDataSet((ILineDataSet) dataChart());
-
-        data.setData(lineDatas);
-
-        xAxis.setAxisMaximum(data.getXMax() + 0.25f);
-
-        combinedChart.setData(data);
-        combinedChart.invalidate();
-    }
-
-    private static DataSet dataChart() {
-
-        LineData d = new LineData();
-        int[] data = new int[] {  1, 2, 7, 1, 5, 1, 9};
-
-        ArrayList<Entry> entries = new ArrayList<Entry>();
-
-        for (int index = 0; index < 7; index++) {
-            entries.add(new Entry(index, data[index]));
-        }
-
-        LineDataSet set = new LineDataSet(entries, "Số cuộc gọi");
-        set.setColor(Color.GREEN);
-        set.setLineWidth(2.5f);
-        set.setCircleColor(Color.GREEN);
-        set.setCircleRadius(5f);
-        set.setFillColor(Color.GREEN);
-        set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
-        set.setDrawValues(true);
-        set.setValueTextSize(10f);
-        set.setValueTextColor(Color.GREEN);
-
-        set.setAxisDependency(YAxis.AxisDependency.LEFT);
-        d.addDataSet(set);
-
-        return set;
-    }
-
+    // thanh tablayout
     @Override
     public void onClick(View view) {
         if (view.getId() == R.id.item1){
@@ -288,4 +218,58 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         }
     }
 
+    @Override
+    public void displayCombinedChart(LineData numberOfCallByDay, List<String> labelDayOfWeek) {
+        combinedChart.animateXY(1500,2000);
+        combinedChart.setPinchZoom(true);
+        combinedChart.getDescription().setEnabled(false);
+        combinedChart.setBackgroundColor(Color.WHITE);
+        combinedChart.setDrawGridBackground(false);
+        combinedChart.setDrawBarShadow(false);
+        combinedChart.setHighlightFullBarEnabled(false);
+        combinedChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+//                Toast.makeText(getContext(), "Value: "
+//                        + e.getY()
+//                        + ", index: "
+//                        + h.getX()
+//                        + ", DataSet index: "
+//                        + h.getDataSetIndex(), Toast.LENGTH_SHORT).show();
+                Toast.makeText(getContext(),getString(R.string.toast_text_view_combined_chart_on_touch,(int)e.getY(),
+                        presenter.getNameOfDay(getContext(),labelDayOfWeek.get((int) h.getX())))
+                ,Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
+        YAxis rightAxis = combinedChart.getAxisRight();
+        rightAxis.setDrawGridLines(false);
+        rightAxis.setAxisMinimum(0f);
+
+        YAxis leftAxis = combinedChart.getAxisLeft();
+        leftAxis.setDrawGridLines(false);
+        leftAxis.setAxisMinimum(0f);
+
+
+        XAxis xAxis = combinedChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setAxisMinimum(0f);
+        xAxis.setGranularity(1f);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(labelDayOfWeek));
+
+        CombinedData data = new CombinedData();
+
+
+        data.setData(numberOfCallByDay);
+
+        xAxis.setAxisMaximum(data.getXMax() + 0.25f);
+
+        combinedChart.setData(data);
+        combinedChart.invalidate();
+    }
 }

@@ -35,6 +35,12 @@
     <string name="title_textview_all_call">Tất cả</string>
     <string name="title_textview_coming_call">Gọi đến</string>
     <string name="title_textview_outgoing_call">Gọi đi</string>
+    <string name="toast_text_view_combined_chart_on_touch">Có %d cuộc gọi vào %s</string>
+<!--    // call statistic presenter-->
+    <string name="day_of_week">thứ %s</string>
+    <string name="sunday">chủ nhật</string>
+    <string name="number_of_call">Số cuộc gọi</string>
+
 
 <!--    AllCallRecyclerAdapter-->
     <string name="title_un_favorite">Bỏ yêu thích</string>

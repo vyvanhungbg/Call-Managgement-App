@@ -30,8 +30,11 @@ public class AllCallPresenter {
     public AllCallPresenter(IAllCallListener listener) {
         this.listener = listener;
         Calendar now = Calendar.getInstance();
-        now = Calendar.getInstance();
-        delta = -now.get(GregorianCalendar.DAY_OF_WEEK) +2; //add 2 if your week start on monday // -7 để lịch chủ nhật không bị tính vào tuần sau
+        boolean isSunday = now.get(Calendar.DAY_OF_WEEK)== Calendar.SUNDAY;
+        delta = -now.get(GregorianCalendar.DAY_OF_WEEK) +2; //add 2 if your week start on monday
+        if(isSunday){
+            delta = delta -7; // -7 để lịch chủ nhật không bị tính vào tuần sau . Fix cho lỗi nếu vào ngày chủ nhật sẽ bị nhảy 1 tuẩn ( chủ nhật tuần sau ) vì Calender là Chủ nhật là  ngày đầu tuần
+        }
     }
 
     public void getTimeLine(int flag){
