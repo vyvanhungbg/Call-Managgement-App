@@ -83,7 +83,7 @@ public class CallStatisticsPresenter {
         }
     }
 
-    public void getCallObjectRealmObject(Realm realm){
+    public void getCallObjectRealmObject(Realm realm, int DayOfYear){
         Calendar calendar = Calendar.getInstance();
         RealmResults<CallObject> callObjectList = null;
         if (realm != null && !realm.isClosed ()) {
@@ -106,7 +106,7 @@ public class CallStatisticsPresenter {
             for (Iterator<CallObject> iterator = callObjectList.iterator (); iterator.hasNext () ; ) {
                 CallObject incomingCallObject = iterator.next ();
                 calendar.setTime (new Date(incomingCallObject.getBeginTimestamp ()));
-                if (calendar.get (Calendar.DAY_OF_YEAR) == ?) {
+                if (calendar.get (Calendar.DAY_OF_YEAR) == DayOfYear) {
                     iterator.remove ();
                     list.add (incomingCallObject);
                 }

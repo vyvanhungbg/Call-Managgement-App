@@ -5,19 +5,19 @@
     <string name="hello_blank_fragment">Hello blank fragment</string>
 
 
-<!--    title navigation bar-->
+    <!--    title navigation bar-->
     <string name="title_action_home">Trang chủ</string>
     <string name="title_action_statistics">Thống kê</string>
     <string name="title_action_all_call">Cuộc gọi</string>
     <string name="title_action_settings">Cài đặt</string>
 
 
-<!--    fragment home-->
+    <!--    fragment home-->
     <string name="title_hello_fragment_home">Xin chào !</string>
     <string name="title_button_off_fragment_home">Bật ghi âm</string>
     <string name="title_button_on__fragment_home">Đang ghi âm</string>
 
-<!--    fragment all call-->
+    <!--    fragment all call-->
     <string name="title_textview_search_fragment_all_call">Tìm kiếm</string>
     <string name="title_textview_day_of_week_2">T2</string>
     <string name="title_textview_day_of_week_3">T3</string>
@@ -27,22 +27,22 @@
     <string name="title_textview_day_of_week_7">T7</string>
     <string name="title_textview_day_of_week_cn">CN</string>
 
-<!--    layout item call-->
+    <!--    layout item call-->
     <string name="title_textview_name_of_phone">Người dùng</string>
     <string name="title_textview_sample_phone_number">0398xxxxxx</string>
 
-<!--    fragment call statistics-->
+    <!--    fragment call statistics-->
     <string name="title_textview_all_call">Tất cả</string>
     <string name="title_textview_coming_call">Gọi đến</string>
     <string name="title_textview_outgoing_call">Gọi đi</string>
     <string name="toast_text_view_combined_chart_on_touch">Có %d cuộc gọi vào %s</string>
-<!--    // call statistic presenter-->
+    <!--    // call statistic presenter-->
     <string name="day_of_week">thứ %s</string>
     <string name="sunday">chủ nhật</string>
     <string name="number_of_call">Số cuộc gọi</string>
 
 
-<!--    AllCallRecyclerAdapter-->
+    <!--    AllCallRecyclerAdapter-->
     <string name="title_un_favorite">Bỏ yêu thích</string>
     <string name="title_favorite">Yêu thích</string>
     <string name="title_delete">Xoá</string>
@@ -52,7 +52,7 @@
     <string name="title_sub_menu_delete">Xoá đoạn ghi âm này</string>
     <string name="title_incoming_call">Cuộc gọi đến</string>
     <string name="title_outgoing_call">Cuộc gọi đi</string>
-<!--    menu sub (delete, make phone call ) dialog in  AllCallRecyclerAdapter-->
+    <!--    menu sub (delete, make phone call ) dialog in  AllCallRecyclerAdapter-->
     <string name="title_header_dialog_delete">Xoá đoạn ghi âm này !</string>
     <string name="title_message_dialog_delete">"Bạn chắc chắn muốn xoá đoạn ghi âm này ? .Không thể phục hồi !"</string>
     <string name="title_message_action_delete_success">Đã xoá đoạn ghi âm này !</string>
@@ -66,18 +66,18 @@
     <string name="title_message_action_make_a_message_failed">Số điện thoại không hợp lệ </string>
 
 
-<!--    call activity-->
+    <!--    call activity-->
     <string name="title_tv_end_time_date_in_activity_call">Kết thúc lúc</string>
     <string name="title_tv_begin_time_date_in_activity_call">Bắt đầu lúc</string>
     <string name="title_tv_phone_number_in_activity_call">Số điện thoại</string>
     <string name="title_tv_time_duration_in_activity_call">Thời luợng</string>
 
 
-<!--    call recorder serviece-->
+    <!--    call recorder serviece-->
     <string name="title_notification">Đang chạy....</string>
     <string name="title_detail_notification">Call Management sẽ tự ghi âm các cuộc gọi !</string>
 
-<!--    ////-->
+    <!--    ////-->
 
     <string name="recorder_header">Recorder</string>
 
@@ -129,6 +129,6 @@
     <string name="duration">Duration</string>
 
 
-<!--    //format-->
+    <!--    //format-->
     <string name="format_duration">%d phút, %d giây</string>
 </resources>

@@ -76,7 +76,10 @@ public class AllCallRecyclerAdapter extends RecyclerView.Adapter<AllCallRecycler
             viewHolder = new ItemViewHolder (view);
         }
         return viewHolder;
+
     }
+
+
 
     @Override
     public int getItemViewType(int position) {

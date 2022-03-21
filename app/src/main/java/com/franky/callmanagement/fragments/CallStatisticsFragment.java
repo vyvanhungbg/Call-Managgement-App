@@ -193,8 +193,6 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
 
 
-
-
     // thanh tablayout
     @Override
     public void onClick(View view) {

@@ -55,4 +55,7 @@ dependencies {
 
     // draw char
     implementation 'com.github.PhilJay:MPAndroidChart:v3.1.0'
+
+    // biometric
+    implementation "androidx.biometric:biometric:1.1.0"
 }

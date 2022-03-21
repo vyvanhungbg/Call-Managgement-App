@@ -76,6 +76,7 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
     private SeekBar playSeekBar;
     private CircleImageView btnBack;
 
+
     private CallActivityPresenter presenter;
 
 
