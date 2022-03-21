@@ -42,6 +42,7 @@ public class AllCallPresenter {
         final SimpleDateFormat formatOfDay = new SimpleDateFormat("dd");
         final SimpleDateFormat formatOfDayAndMonth = new SimpleDateFormat("dd/MM/yyyy");
         String[] days = new String[7];
+        int[] dayOfWeeks = new int[7];
 
         delta = delta + (NEXT_TIME_LINE == flag ? 7 : PREVIOUS_TIME_LINE == flag ? -7 : 0); // change time line by button
 
@@ -51,6 +52,7 @@ public class AllCallPresenter {
         for (int i = 0; i < 7; i++)
         {
             days[i] = formatOfDayAndMonth.format(now.getTime());
+            dayOfWeeks[i] = now.get(Calendar.DAY_OF_YEAR);
             now.add(Calendar.DAY_OF_MONTH, 1);
         }
 
@@ -61,6 +63,7 @@ public class AllCallPresenter {
 //        System.arraycopy(days,0,dayOfWeek,1, days.length-1);
 //        dayOfWeek[0] = days[dayOfWeek.length-1];
         System.out.println(Arrays.toString(days));
+        System.out.println(Arrays.toString(dayOfWeeks));
         listener.actionViewTimeLine(days);
 
     }

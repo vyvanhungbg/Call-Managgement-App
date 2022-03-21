@@ -1,5 +1,7 @@
 package com.franky.callmanagement.fragments;
 
+import static com.franky.callmanagement.utils.LogUtil.LogE;
+
 import android.content.res.ColorStateList;
 import android.graphics.Color;
 import android.os.Bundle;
@@ -11,37 +13,34 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageButton;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franky.callmanagement.R;
 import com.franky.callmanagement.databinding.FragmentCallStatisticsBinding;
 import com.franky.callmanagement.interfaces.ICallStatisticsListener;
+import com.franky.callmanagement.presenters.AllCallPresenter;
 import com.franky.callmanagement.presenters.CallStatisticsPresenter;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.CombinedData;
-import com.github.mikephil.charting.data.DataSet;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
-import com.github.mikephil.charting.data.LineDataSet;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
-import com.github.mikephil.charting.interfaces.datasets.ILineDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
-import java.util.Objects;
+
+import io.realm.Realm;
 
 
 /**
@@ -51,6 +50,8 @@ import java.util.Objects;
  */
 public class CallStatisticsFragment extends Fragment implements View.OnClickListener , ICallStatisticsListener {
 
+    private static final String TAG = CallStatisticsFragment.class.getSimpleName();
+    //FragmentCallStatisticsBinding binding;
     private CallStatisticsPresenter presenter;
     ColorStateList def;
     TextView item1;
@@ -59,6 +60,14 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
     TextView select;
     CombinedChart combinedChart;
     HorizontalBarChart horizontalBarChart;
+
+    TextView tvFromDayToDay ;
+    ImageButton btnNextTimeLine,btnPreviousTimeLine;
+
+    private String [] timeline ;
+    private int[] dayOfWeeks;
+
+    private Realm mRealm = null;
 
     public static CallStatisticsFragment newInstance() {
         CallStatisticsFragment fragment = new CallStatisticsFragment();
@@ -71,9 +80,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        if (getArguments() != null) {
-
-        }
+       init();
     }
 
     @Override
@@ -90,22 +97,34 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         item2.setOnClickListener(this);
         item3.setOnClickListener(this);
         combinedChart = view.findViewById(R.id.combinedChart);
-        horizontalBarChart = view.findViewById(R.id.horizontalBarChart);
+        //horizontalBarChart = view.findViewById(R.id.horizontalBarChart);
         select = view.findViewById(R.id.select);
         def = item2.getTextColors();
-
+        tvFromDayToDay = view.findViewById(R.id.tv_from_day_to_day_in_call_statistic);
+        btnNextTimeLine = view.findViewById(R.id.btn_next_time_line_in_call_statistic);
+        btnPreviousTimeLine = view.findViewById(R.id.btn_previous_time_line_in_call_statistic);
         return view;
     }
 
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-        presenter.getDataForCombinedChart(requireContext());
-        createHorizontalBarChart();
+
+       // createHorizontalBarChart();
+        presenter.getTimeLine(CallStatisticsPresenter.NOW_TIME_LINE);
+
+        setOnClickButtonNextOrPrevious();
     }
 
     public void init(){
         presenter = new CallStatisticsPresenter(this);
+        try {
+            mRealm = Realm.getDefaultInstance ();
+        } catch (Exception e) {
+            LogE (TAG, e.getMessage ());
+            LogE (TAG, e.toString ());
+            e.printStackTrace ();
+        }
     }
 
     public void createHorizontalBarChart(){
@@ -269,5 +288,40 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
         combinedChart.setData(data);
         combinedChart.invalidate();
+    }
+
+    @Override
+    public void getTimeLine(String[] days, int[] dayOfWeeks) {
+        timeline = days;
+        this.dayOfWeeks = dayOfWeeks;
+
+        tvFromDayToDay.setText(days[0]+ " --> "+days[6]);
+        int [] numberOfCallPerDay = new int[dayOfWeeks.length];
+        for(int i=0;i<dayOfWeeks.length;i++){
+            System.out.println("Ngày : "+days[i]+" có : "+ presenter.getCallObjectRealmObject(mRealm,dayOfWeeks[i]) +" cuộc gọi ");
+            numberOfCallPerDay[i] = presenter.getCallObjectRealmObject(mRealm,dayOfWeeks[i]);
+        }
+
+        presenter.getDataForCombinedChart(requireContext(),numberOfCallPerDay);
+    }
+
+    public void setOnClickButtonNextOrPrevious(){
+       btnPreviousTimeLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.getTimeLine(CallStatisticsPresenter.PREVIOUS_TIME_LINE);
+               // setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), presenter.convertRealmResultsToList(mRealm,mCallObjectRealmResults),presenter.getDayOfYearSelected(timeline,isDaySelected)));
+            }
+        });
+
+        btnNextTimeLine.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                presenter.getTimeLine(CallStatisticsPresenter.NEXT_TIME_LINE);
+                //setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), presenter.convertRealmResultsToList(mRealm,mCallObjectRealmResults),presenter.getDayOfYearSelected(timeline,isDaySelected)));
+            }
+        });
+
+
     }
 }

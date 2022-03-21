@@ -89,24 +89,67 @@
 
 <!--            // horizontal char-->
 
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="0dp"-->
+
+<!--                android:layout_margin="@dimen/_8sdp"-->
+<!--                app:layout_constraintTop_toBottomOf="@id/gl_horizontal_3"-->
+<!--                app:layout_constraintBottom_toBottomOf="parent"-->
+<!--                app:cardCornerRadius="@dimen/_12sdp"-->
+<!--                app:cardElevation="5dp"-->
+<!--                app:cardPreventCornerOverlap="false">-->
+<!--                <com.github.mikephil.charting.charts.HorizontalBarChart-->
+<!--                    android:id="@+id/horizontalBarChart"-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="match_parent"-->
+<!--                    />-->
+
+<!--            </androidx.cardview.widget.CardView>-->
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
-                android:layout_height="0dp"
-
-                android:layout_margin="@dimen/_8sdp"
-                app:layout_constraintTop_toBottomOf="@id/gl_horizontal_3"
+                android:layout_height="@dimen/_35sdp"
+                app:layout_constraintLeft_toLeftOf="parent"
+                app:layout_constraintRight_toRightOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"
-                app:cardCornerRadius="@dimen/_12sdp"
-                app:cardElevation="5dp"
-                app:cardPreventCornerOverlap="false">
-                <com.github.mikephil.charting.charts.HorizontalBarChart
-                    android:id="@+id/horizontalBarChart"
+                app:cardElevation="0dp"
+                app:cardPreventCornerOverlap="false"
+                app:cardCornerRadius="@dimen/_20sdp"
+                >
+                <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    />
+                    android:background="@drawable/custom_navigate_time_line_rounded">
 
+                    <ImageButton
+                        android:id="@+id/btn_previous_time_line_in_call_statistic"
+                        android:layout_width="65dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentLeft="true"
+                        android:background="@drawable/custom_button_next_previous_rounded"
+                        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
+
+                    <TextView
+                        android:id="@+id/tv_from_day_to_day_in_call_statistic"
+                        android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_centerInParent="true"
+                        android:gravity="center"
+                        android:text="__/__  => __/__"
+                        android:textSize="@dimen/_12sdp"
+                        android:textStyle="bold" />
+
+                    <ImageButton
+                        android:id="@+id/btn_next_time_line_in_call_statistic"
+                        android:layout_width="65dp"
+                        android:layout_height="match_parent"
+                        android:layout_alignParentRight="true"
+                        android:foreground="?android:attr/selectableItemBackgroundBorderless"
+                        android:background="@drawable/custom_button_next_previous_rounded"
+                        android:src="@drawable/ic_baseline_keyboard_arrow_right_24" />
+                </RelativeLayout>
             </androidx.cardview.widget.CardView>
-
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
