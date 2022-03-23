@@ -7,9 +7,12 @@ import android.app.Application;
 import android.content.ComponentCallbacks2;
 import android.os.Build;
 
+import com.facebook.stetho.Stetho;
 import com.franky.callmanagement.env.AppConstants;
+import com.uphyca.stetho_realm.RealmInspectorModulesProvider;
 
 import java.util.Objects;
+import java.util.regex.Pattern;
 
 import io.realm.Realm;
 import io.realm.RealmConfiguration;
@@ -23,6 +26,11 @@ public class CallManagementApp extends Application {
 
     @Override
     public void onCreate () {
+
+
+
+
+
         AppConstants.sFilesDirMemory = getFilesDir ();
         AppConstants.sFilesDirPathMemory = getFilesDir ().getPath ();
         AppConstants.sCacheDirMemory = getCacheDir ();
@@ -54,6 +62,25 @@ public class CallManagementApp extends Application {
                 .build ();
         LogD (TAG, "Realm configuration schema version: " + realmConfiguration.getSchemaVersion ());
         Realm.setDefaultConfiguration (realmConfiguration);
+
+
+
+
+
+        Stetho.initialize(
+                Stetho.newInitializerBuilder(this)
+                        .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                        .enableWebKitInspector(RealmInspectorModulesProvider.builder(this)
+                                .withFolder(getCacheDir())
+                                //.withEncryptionKey("encrypted.realm", key)
+                                .withMetaTables()
+                                .withDescendingOrder()
+                                .withLimit(1000)
+                                .databaseNamePattern(Pattern.compile(".+\\.realm"))
+                                .build())
+
+                        .build());
+
     }
 
     @Override

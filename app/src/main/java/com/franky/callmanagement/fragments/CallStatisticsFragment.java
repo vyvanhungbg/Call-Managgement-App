@@ -18,9 +18,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.franky.callmanagement.R;
-import com.franky.callmanagement.databinding.FragmentCallStatisticsBinding;
 import com.franky.callmanagement.interfaces.ICallStatisticsListener;
-import com.franky.callmanagement.presenters.AllCallPresenter;
 import com.franky.callmanagement.presenters.CallStatisticsPresenter;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
@@ -69,6 +67,8 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
     private Realm mRealm = null;
 
+    private static int FLAG_FILTER_CALL = CallStatisticsPresenter.ALL_CALL; // xem filter theo cuộc gọi đến / đi / hay tất cả
+
     public static CallStatisticsFragment newInstance() {
         CallStatisticsFragment fragment = new CallStatisticsFragment();
         Bundle args = new Bundle();
@@ -111,7 +111,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         super.onViewCreated(view, savedInstanceState);
 
        // createHorizontalBarChart();
-        presenter.getTimeLine(CallStatisticsPresenter.NOW_TIME_LINE);
+        presenter.getTimeLine(mRealm,CallStatisticsPresenter.NOW_TIME_LINE,FLAG_FILTER_CALL);
 
         setOnClickButtonNextOrPrevious();
     }
@@ -220,19 +220,24 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
             item1.setTextColor(Color.WHITE);
             item2.setTextColor(def);
             item3.setTextColor(def);
+            FLAG_FILTER_CALL = CallStatisticsPresenter.ALL_CALL;
         } else if (view.getId() == R.id.item2){
             item1.setTextColor(def);
             item2.setTextColor(Color.WHITE);
             item3.setTextColor(def);
             int size = item2.getWidth();
             select.animate().x(size).setDuration(200);
+            FLAG_FILTER_CALL = CallStatisticsPresenter.INCOMING_CALL;
         } else if (view.getId() == R.id.item3){
             item1.setTextColor(def);
             item3.setTextColor(Color.WHITE);
             item2.setTextColor(def);
             int size = item2.getWidth() * 2;
             select.animate().x(size).setDuration(200);
+            FLAG_FILTER_CALL = CallStatisticsPresenter.OUTGOING_CALL;
         }
+        // làm mới biểu đồ mỗi khi bấm tab selected
+        presenter.getTimeLine(mRealm, CallStatisticsPresenter.NOW_TIME_LINE, FLAG_FILTER_CALL);
     }
 
     @Override
@@ -291,16 +296,12 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public void getTimeLine(String[] days, int[] dayOfWeeks) {
-        timeline = days;
+    public void getTimeLine(String[] listDaysOfAWeek,  int[] dayOfWeeks, int [] numberOfCallPerDay) {
+        timeline = listDaysOfAWeek;
         this.dayOfWeeks = dayOfWeeks;
 
-        tvFromDayToDay.setText(days[0]+ " --> "+days[6]);
-        int [] numberOfCallPerDay = new int[dayOfWeeks.length];
-        for(int i=0;i<dayOfWeeks.length;i++){
-            System.out.println("Ngày : "+days[i]+" có : "+ presenter.getCallObjectRealmObject(mRealm,dayOfWeeks[i]) +" cuộc gọi ");
-            numberOfCallPerDay[i] = presenter.getCallObjectRealmObject(mRealm,dayOfWeeks[i]);
-        }
+        tvFromDayToDay.setText(listDaysOfAWeek[0]+ " --> "+listDaysOfAWeek[6]);
+
 
         presenter.getDataForCombinedChart(requireContext(),numberOfCallPerDay);
     }
@@ -309,16 +310,14 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
        btnPreviousTimeLine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.getTimeLine(CallStatisticsPresenter.PREVIOUS_TIME_LINE);
-               // setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), presenter.convertRealmResultsToList(mRealm,mCallObjectRealmResults),presenter.getDayOfYearSelected(timeline,isDaySelected)));
+                presenter.getTimeLine(mRealm, CallStatisticsPresenter.PREVIOUS_TIME_LINE, FLAG_FILTER_CALL);
             }
         });
 
         btnNextTimeLine.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                presenter.getTimeLine(CallStatisticsPresenter.NEXT_TIME_LINE);
-                //setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), presenter.convertRealmResultsToList(mRealm,mCallObjectRealmResults),presenter.getDayOfYearSelected(timeline,isDaySelected)));
+                presenter.getTimeLine(mRealm, CallStatisticsPresenter.NEXT_TIME_LINE, FLAG_FILTER_CALL);
             }
         });
 

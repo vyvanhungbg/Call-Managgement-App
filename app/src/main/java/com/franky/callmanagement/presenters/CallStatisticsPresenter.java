@@ -7,6 +7,7 @@ import android.graphics.Color;
 import android.util.Log;
 
 import com.franky.callmanagement.R;
+import com.franky.callmanagement.env.AppConstants;
 import com.franky.callmanagement.interfaces.ICallStatisticsListener;
 import com.franky.callmanagement.models.CallObject;
 import com.github.mikephil.charting.components.YAxis;
@@ -34,6 +35,10 @@ public class CallStatisticsPresenter {
     public static final int NEXT_TIME_LINE = 1;
     public static final int PREVIOUS_TIME_LINE = -1;
     public static final int NOW_TIME_LINE = 0;
+
+    public static final int INCOMING_CALL = 1;
+    public static final int OUTGOING_CALL = 2;
+    public static final int ALL_CALL = 3;
     private static int delta ;
 
     public CallStatisticsPresenter(ICallStatisticsListener listener) {
@@ -109,15 +114,25 @@ public class CallStatisticsPresenter {
     }
 
     // lấy số cuộc gọi theo ngày
-    public int getCallObjectRealmObject(Realm realm, int dayOfYear){
+    public int getCallObjectRealmObject(Realm realm, int dayOfYear,int flag){
         Calendar calendar = Calendar.getInstance();
         RealmResults<CallObject> callObjectRealmResults = null;
         if (realm != null && !realm.isClosed ()) {
             try {
-                callObjectRealmResults = realm.where (CallObject.class)
-                        .greaterThan ("mEndTimestamp", 0L)
-                        .sort ("mBeginTimestamp", Sort.DESCENDING)
-                        .findAll ();
+                if(flag == OUTGOING_CALL || flag == INCOMING_CALL){
+                    callObjectRealmResults = realm.where (CallObject.class)
+                            .greaterThan ("mEndTimestamp", 0L)
+                            .sort ("mBeginTimestamp", Sort.DESCENDING)
+                            //.beginGroup ()
+                            .equalTo ("type", flag == INCOMING_CALL ? AppConstants.TYPE_INCOMING_CALL : AppConstants.TYPE_OUTGOING_CALL )
+                           // .endGroup ()
+                            .findAll ();
+                }else {
+                    callObjectRealmResults = realm.where (CallObject.class)
+                            .greaterThan ("mEndTimestamp", 0L)
+                            .sort ("mBeginTimestamp", Sort.DESCENDING)
+                            .findAll ();
+                }
             } catch (Exception e) {
                 LogE (TAG, e.getMessage ());
                 LogE (TAG, e.toString ());
@@ -132,11 +147,11 @@ public class CallStatisticsPresenter {
         List<CallObject> list = new ArrayList<> ();
         if (!callObjectList.isEmpty ()) {
             for (Iterator<CallObject> iterator = callObjectList.iterator (); iterator.hasNext () ; ) {
-                CallObject incomingCallObject = iterator.next ();
-                calendar.setTime (new Date(incomingCallObject.getBeginTimestamp ()));
+                CallObject object = iterator.next ();
+                calendar.setTime (new Date(object.getBeginTimestamp ()));
                 if (calendar.get (Calendar.DAY_OF_YEAR) == dayOfYear) {
                     iterator.remove ();
-                    list.add (incomingCallObject);
+                    list.add (object);
                 }
             }
 
@@ -145,26 +160,33 @@ public class CallStatisticsPresenter {
     }
 
     // lấy cả tuần chưa ngày hiện tại
-    public void getTimeLine(int flag){
+    //flagFilter =  ALL_CALL ? INCOMMING_CALL ? OUTGOING_CALL
+    // flagTimeLine = NEXT_WEEK ? PRIVIOUS_WEEK ? NOW
+    public void getTimeLine(Realm mRealm,int flagTimeLine, int flagFilter){
         Calendar now = Calendar.getInstance();
         final SimpleDateFormat formatOfDay = new SimpleDateFormat("dd");
         final SimpleDateFormat formatOfDayAndMonth = new SimpleDateFormat("dd/MM/yyyy");
-        String[] days = new String[7];
-        int[] dayOfWeeks = new int[7];
+        String[] listDaysOfAWeek = new String[7]; //lấy ngày tháng năm theo tuần
+        int[] dayOfWeeks = new int[7]; // lấy ngày của năm
 
-        delta = delta + (NEXT_TIME_LINE == flag ? 7 : PREVIOUS_TIME_LINE == flag ? -7 : 0); // change time line by button
+        delta = delta + (NEXT_TIME_LINE == flagTimeLine ? 7 : PREVIOUS_TIME_LINE == flagTimeLine ? -7 : 0); // change time line by button
 
-        //Log.e("dellta",delta+" | now : "+now.getTime().toString()); // t2 deleta =0, dayofwwek = 2
-       // Log.e("DAy of week", now.get(Calendar.DAY_OF_WEEK)+"");
+
         now.add(Calendar.DAY_OF_MONTH, delta );
         for (int i = 0; i < 7; i++)
         {
-            days[i] = formatOfDayAndMonth.format(now.getTime());
+            listDaysOfAWeek[i] = formatOfDayAndMonth.format(now.getTime());
             dayOfWeeks[i] = now.get(Calendar.DAY_OF_YEAR);
             now.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        listener.getTimeLine(days
-                ,dayOfWeeks);
+        // tính toán số cuộc gọi theo tuần
+        int [] numberOfCallPerDay = new int[dayOfWeeks.length];
+        for(int i=0;i<dayOfWeeks.length;i++){
+            //  System.out.println("Ngày : "+days[i]+" có : "+ presenter.getCallObjectRealmObject(mRealm,dayOfWeeks[i]) +" cuộc gọi ");
+            numberOfCallPerDay[i] = getCallObjectRealmObject(mRealm,dayOfWeeks[i],flagFilter);
+        }
+
+        listener.getTimeLine(listDaysOfAWeek, dayOfWeeks, numberOfCallPerDay);
     }
 }

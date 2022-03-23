@@ -31,7 +31,12 @@ android {
     }
 }
 repositories {
-    maven { url 'https://jitpack.io' }
+    maven {
+        url 'https://jitpack.io'
+    }
+    maven {
+        url 'https://github.com/uPhyca/stetho-realm/raw/master/maven-repo'
+    }
 }
 
 dependencies {
@@ -58,4 +63,8 @@ dependencies {
 
     // biometric
     implementation "androidx.biometric:biometric:1.1.0"
+
+    //stetho
+    implementation 'com.facebook.stetho:stetho:1.5.0'
+    implementation 'com.uphyca:stetho_realm:2.1.0'
 }

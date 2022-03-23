@@ -546,7 +546,7 @@ public class CallRecorderService extends Service {
                             incomingCallObject.setOutputFormat (finalOutputFormat);
                             incomingCallObject.setAudioEncoder (finalAudioEncoder);
                             incomingCallObject.setOutputFile (finalOutputFilePath);
-                            incomingCallObject.setType ("incoming");
+                            incomingCallObject.setType (AppConstants.TYPE_INCOMING_CALL);
                             incomingCallObject.setFavourite (favorite);
                         }
                     });
@@ -570,7 +570,7 @@ public class CallRecorderService extends Service {
                             outgoingCallObject.setOutputFormat (finalOutputFormat);
                             outgoingCallObject.setAudioEncoder (finalAudioEncoder);
                             outgoingCallObject.setOutputFile (finalOutputFilePath);
-                            outgoingCallObject.setType ("outgoing");
+                            outgoingCallObject.setType (AppConstants.TYPE_OUTGOING_CALL);
                             outgoingCallObject.setFavourite (favorite);
                         }
                     });

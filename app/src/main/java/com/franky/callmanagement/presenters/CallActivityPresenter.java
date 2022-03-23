@@ -16,6 +16,7 @@ import androidx.appcompat.app.AlertDialog;
 import androidx.core.app.ActivityCompat;
 
 import com.franky.callmanagement.R;
+import com.franky.callmanagement.env.AppConstants;
 import com.franky.callmanagement.interfaces.ICallActivityListener;
 import com.franky.callmanagement.models.CallObject;
 
@@ -77,7 +78,7 @@ public class CallActivityPresenter {
                             .equalTo ("mEndTimestamp", endTimestamp)
                             .sort ("mBeginTimestamp", Sort.DESCENDING)
                             .beginGroup ()
-                            .equalTo ("type", "incoming")
+                            .equalTo ("type", AppConstants.TYPE_INCOMING_CALL)
                             .endGroup ()
                             .findFirst ();
                 } else if (mIsOutgoing) {
@@ -86,7 +87,7 @@ public class CallActivityPresenter {
                             .equalTo ("mEndTimestamp", endTimestamp)
                             .sort ("mBeginTimestamp", Sort.DESCENDING)
                             .beginGroup ()
-                            .equalTo ("type", "outgoing")
+                            .equalTo ("type", AppConstants.TYPE_OUTGOING_CALL)
                             .endGroup ()
                             .findFirst ();
                 }
