@@ -1,10 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android">
+<layout xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
     <FrameLayout
-        xmlns:tools="http://schemas.android.com/tools"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
         tools:context=".fragments.CallStatisticsFragment">
 
         <androidx.constraintlayout.widget.ConstraintLayout
@@ -24,18 +24,14 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.2"/>
+                app:layout_constraintGuide_percent="0.7"/>
 
-            <androidx.constraintlayout.widget.Guideline
-                android:id="@+id/gl_horizontal_3"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:orientation="horizontal"
-                app:layout_constraintGuide_percent="0.8"/>
+
 
 
             <!--        header-->
             <LinearLayout
+                android:visibility="gone"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:layout_constraintLeft_toRightOf="parent"
@@ -59,10 +55,11 @@
             </LinearLayout>
 
             <RelativeLayout
+                android:layout_marginTop="@dimen/_12sdp"
                 android:layout_width="match_parent"
                 android:layout_height="@dimen/_50sdp"
-                app:layout_constraintTop_toBottomOf="@id/gl_horizontal_1"
-                app:layout_constraintBottom_toTopOf="@id/gl_horizontal_2">
+                app:layout_constraintTop_toTopOf="parent"
+                app:layout_constraintBottom_toTopOf="@id/gl_horizontal_1">
 
                 <include layout="@layout/custom_layout_container_tab_layout" />
 
@@ -74,82 +71,53 @@
                 android:layout_height="0dp"
 
                 android:layout_margin="@dimen/_8sdp"
-                app:layout_constraintTop_toBottomOf="@id/gl_horizontal_2"
-                app:layout_constraintBottom_toTopOf="@id/gl_horizontal_3"
+                app:layout_constraintTop_toBottomOf="@id/gl_horizontal_1"
+                app:layout_constraintBottom_toTopOf="@id/gl_horizontal_2"
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="5dp"
                 app:cardPreventCornerOverlap="false">
-                <com.github.mikephil.charting.charts.CombinedChart
-                    android:id="@+id/combinedChart"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="20dp"/>
-
-            </androidx.cardview.widget.CardView>
-
-<!--            // horizontal char-->
-
-<!--            <androidx.cardview.widget.CardView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="0dp"-->
-
-<!--                android:layout_margin="@dimen/_8sdp"-->
-<!--                app:layout_constraintTop_toBottomOf="@id/gl_horizontal_3"-->
-<!--                app:layout_constraintBottom_toBottomOf="parent"-->
-<!--                app:cardCornerRadius="@dimen/_12sdp"-->
-<!--                app:cardElevation="5dp"-->
-<!--                app:cardPreventCornerOverlap="false">-->
-<!--                <com.github.mikephil.charting.charts.HorizontalBarChart-->
-<!--                    android:id="@+id/horizontalBarChart"-->
-<!--                    android:layout_width="match_parent"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    />-->
-
-<!--            </androidx.cardview.widget.CardView>-->
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="@dimen/_35sdp"
-                app:layout_constraintLeft_toLeftOf="parent"
-                app:layout_constraintRight_toRightOf="parent"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:cardElevation="0dp"
-                app:cardPreventCornerOverlap="false"
-                app:cardCornerRadius="@dimen/_20sdp"
-                >
                 <RelativeLayout
                     android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:background="@drawable/custom_navigate_time_line_rounded">
-
-                    <ImageButton
-                        android:id="@+id/btn_previous_time_line_in_call_statistic"
-                        android:layout_width="65dp"
+                    android:layout_height="match_parent">
+                    <com.github.mikephil.charting.charts.CombinedChart
+                        android:id="@+id/combinedChart"
+                        android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_alignParentLeft="true"
-                        android:background="@drawable/custom_button_next_previous_rounded"
-                        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                        android:src="@drawable/ic_baseline_keyboard_arrow_left_24" />
+                        android:layout_marginTop="@dimen/_20sdp"
+                        android:layout_above="@id/layout_next_previous_time_line" />
 
-                    <TextView
-                        android:id="@+id/tv_from_day_to_day_in_call_statistic"
+                    <include
+                        android:id="@+id/layout_next_previous_time_line"
+                        layout="@layout/layout_next_previous_time_line"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_centerInParent="true"
-                        android:gravity="center"
-                        android:text="__/__  => __/__"
-                        android:textSize="@dimen/_12sdp"
-                        android:textStyle="bold" />
-
-                    <ImageButton
-                        android:id="@+id/btn_next_time_line_in_call_statistic"
-                        android:layout_width="65dp"
-                        android:layout_height="match_parent"
-                        android:layout_alignParentRight="true"
-                        android:foreground="?android:attr/selectableItemBackgroundBorderless"
-                        android:background="@drawable/custom_button_next_previous_rounded"
-                        android:src="@drawable/ic_baseline_keyboard_arrow_right_24" />
+                        android:layout_height="wrap_content"
+                        android:layout_alignParentBottom="true"
+                        android:layout_centerInParent="true" />
                 </RelativeLayout>
+
             </androidx.cardview.widget.CardView>
+
+            // horizontal char
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="0dp"
+
+                android:layout_margin="@dimen/_8sdp"
+
+                app:layout_constraintTop_toBottomOf="@id/gl_horizontal_2"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:cardCornerRadius="@dimen/_12sdp"
+                app:cardElevation="5dp"
+                app:cardPreventCornerOverlap="false">
+                <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:id="@+id/horizontalBarChart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    />
+
+            </androidx.cardview.widget.CardView>
+
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

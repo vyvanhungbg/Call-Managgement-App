@@ -76,7 +76,8 @@ public class CallStatisticsPresenter {
         set.setMode(LineDataSet.Mode.CUBIC_BEZIER);
         set.setDrawValues(true);
         set.setValueTextSize(10f);
-        set.setValueTextColor(Color.GREEN);
+        set.setValueTextColor(Color.RED);
+
 
         set.setAxisDependency(YAxis.AxisDependency.LEFT);
         numberOfCallByDay.addDataSet(set);

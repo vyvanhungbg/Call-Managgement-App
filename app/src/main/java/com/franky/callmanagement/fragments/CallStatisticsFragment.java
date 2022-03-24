@@ -14,6 +14,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -60,7 +61,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
     HorizontalBarChart horizontalBarChart;
 
     TextView tvFromDayToDay ;
-    ImageButton btnNextTimeLine,btnPreviousTimeLine;
+    ImageView btnNextTimeLine,btnPreviousTimeLine;
 
     private String [] timeline ;
     private int[] dayOfWeeks;
@@ -97,12 +98,12 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         item2.setOnClickListener(this);
         item3.setOnClickListener(this);
         combinedChart = view.findViewById(R.id.combinedChart);
-        //horizontalBarChart = view.findViewById(R.id.horizontalBarChart);
+        horizontalBarChart = view.findViewById(R.id.horizontalBarChart);
         select = view.findViewById(R.id.select);
         def = item2.getTextColors();
-        tvFromDayToDay = view.findViewById(R.id.tv_from_day_to_day_in_call_statistic);
-        btnNextTimeLine = view.findViewById(R.id.btn_next_time_line_in_call_statistic);
-        btnPreviousTimeLine = view.findViewById(R.id.btn_previous_time_line_in_call_statistic);
+        tvFromDayToDay = view.findViewById(R.id.tv_date_in_layout_next_previous_time_line);
+        btnNextTimeLine = view.findViewById(R.id.imgv_right_in_layout_next_previous_time_line);
+        btnPreviousTimeLine = view.findViewById(R.id.imgv_left_in_layout_next_previous_time_line);
         return view;
     }
 
@@ -110,7 +111,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-       // createHorizontalBarChart();
+        createHorizontalBarChart();
         presenter.getTimeLine(mRealm,CallStatisticsPresenter.NOW_TIME_LINE,FLAG_FILTER_CALL);
 
         setOnClickButtonNextOrPrevious();
@@ -242,12 +243,13 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
     @Override
     public void displayCombinedChart(LineData numberOfCallByDay, List<String> labelDayOfWeek) {
-        combinedChart.animateXY(1500,2000);
+        combinedChart.animateXY(1000,1500);
         combinedChart.setPinchZoom(true);
         combinedChart.getDescription().setEnabled(false);
         combinedChart.setBackgroundColor(Color.WHITE);
         combinedChart.setDrawGridBackground(false);
         combinedChart.setDrawBarShadow(false);
+
         combinedChart.setHighlightFullBarEnabled(false);
         combinedChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
             @Override
@@ -300,7 +302,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         timeline = listDaysOfAWeek;
         this.dayOfWeeks = dayOfWeeks;
 
-        tvFromDayToDay.setText(listDaysOfAWeek[0]+ " --> "+listDaysOfAWeek[6]);
+        tvFromDayToDay.setText(listDaysOfAWeek[0].substring(0,listDaysOfAWeek[0].length()-5)+ " - "+listDaysOfAWeek[6].substring(0,listDaysOfAWeek[6].length()-5));
 
 
         presenter.getDataForCombinedChart(requireContext(),numberOfCallPerDay);
