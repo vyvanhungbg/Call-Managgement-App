@@ -13,7 +13,6 @@ import androidx.fragment.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -21,8 +20,11 @@ import android.widget.Toast;
 import com.franky.callmanagement.R;
 import com.franky.callmanagement.interfaces.ICallStatisticsListener;
 import com.franky.callmanagement.presenters.CallStatisticsPresenter;
+import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
+import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
@@ -31,10 +33,15 @@ import com.github.mikephil.charting.data.BarEntry;
 import com.github.mikephil.charting.data.CombinedData;
 import com.github.mikephil.charting.data.Entry;
 import com.github.mikephil.charting.data.LineData;
+import com.github.mikephil.charting.data.PieData;
+import com.github.mikephil.charting.data.PieDataSet;
+import com.github.mikephil.charting.data.PieEntry;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
+import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
 import com.github.mikephil.charting.interfaces.datasets.IBarDataSet;
 import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
+import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -67,6 +74,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
     private int[] dayOfWeeks;
 
     private Realm mRealm = null;
+    private PieChart pieChart;
 
     private static int FLAG_FILTER_CALL = CallStatisticsPresenter.ALL_CALL; // xem filter theo cuộc gọi đến / đi / hay tất cả
 
@@ -104,6 +112,13 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         tvFromDayToDay = view.findViewById(R.id.tv_date_in_layout_next_previous_time_line);
         btnNextTimeLine = view.findViewById(R.id.imgv_right_in_layout_next_previous_time_line);
         btnPreviousTimeLine = view.findViewById(R.id.imgv_left_in_layout_next_previous_time_line);
+
+
+        //pie chart
+
+        pieChart = view.findViewById(R.id.pie_chart);
+        setupPieChart();
+        loadPieChartData();
         return view;
     }
 
@@ -178,8 +193,8 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
     private void setData(int count, float range) {
 
-        float barWidth = 9f;
-        float spaceForBar = 10f;
+        float barWidth = 1f;
+        float spaceForBar = 3f;
         ArrayList<BarEntry> values = new ArrayList<>();
 
         for (int i = 0; i < count; i++) {
@@ -197,7 +212,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
             horizontalBarChart.getData().notifyDataChanged();
             horizontalBarChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(values, "DataSet 1");
+            set1 = new BarDataSet(values, "Phút gọi");
 
             set1.setDrawIcons(false);
 
@@ -205,6 +220,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
             dataSets.add(set1);
 
             BarData data = new BarData(dataSets);
+            data.setValueTextColor(Color.RED);
             data.setValueTextSize(10f);
             data.setBarWidth(barWidth);
             horizontalBarChart.setData(data);
@@ -298,7 +314,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
     }
 
     @Override
-    public void getTimeLine(String[] listDaysOfAWeek,  int[] dayOfWeeks, int [] numberOfCallPerDay) {
+    public void getTimeLine(String[] listDaysOfAWeek, int[] dayOfWeeks, int[] numberOfCallPerDay, int[] listTotalCallSeconds) {
         timeline = listDaysOfAWeek;
         this.dayOfWeeks = dayOfWeeks;
 
@@ -325,4 +341,56 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
 
     }
+
+    // Pie Chart
+
+    private void setupPieChart() {
+        pieChart.setDrawHoleEnabled(true);
+        pieChart.setUsePercentValues(true);
+       // pieChart.setEntryLabelTextSize(12);
+        pieChart.setEntryLabelColor(Color.BLACK);
+        pieChart.setCenterText("Spending by Category");
+        //pieChart.setCenterTextSize(24);
+        pieChart.getDescription().setEnabled(false);
+
+        Legend l = pieChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.TOP);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.RIGHT);
+        l.setOrientation(Legend.LegendOrientation.VERTICAL);
+        l.setDrawInside(false);
+        l.setEnabled(true);
+    }
+
+    private void loadPieChartData() {
+        ArrayList<PieEntry> entries = new ArrayList<>();
+        entries.add(new PieEntry(70, "Food & Dining"));
+        entries.add(new PieEntry(30, ""));
+       // entries.add(new PieEntry(0.10f, "Entertainment"));
+        //entries.add(new PieEntry(0.25f, "Electricity and Gas"));
+        //entries.add(new PieEntry(0.3f, "Housing"));
+
+        ArrayList<Integer> colors = new ArrayList<>();
+        for (int color: ColorTemplate.MATERIAL_COLORS) {
+            colors.add(color);
+        }
+
+        for (int color: ColorTemplate.VORDIPLOM_COLORS) {
+            colors.add(color);
+        }
+
+        PieDataSet dataSet = new PieDataSet(entries, "Expense Category");
+        dataSet.setColors(colors);
+
+        PieData data = new PieData(dataSet);
+        data.setDrawValues(true);
+        data.setValueFormatter(new PercentFormatter(pieChart));
+       // data.setValueTextSize(12f);
+        data.setValueTextColor(Color.BLACK);
+
+        pieChart.setData(data);
+        pieChart.invalidate();
+        pieChart.setUsePercentValues(false);
+        pieChart.animateY(1400, Easing.EaseInOutQuad);
+    }
+
 }

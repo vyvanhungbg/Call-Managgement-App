@@ -102,19 +102,23 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="0dp"
-
                 android:layout_margin="@dimen/_8sdp"
-
                 app:layout_constraintTop_toBottomOf="@id/gl_horizontal_2"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:cardCornerRadius="@dimen/_12sdp"
                 app:cardElevation="5dp"
                 app:cardPreventCornerOverlap="false">
                 <com.github.mikephil.charting.charts.HorizontalBarChart
+                    android:visibility="gone"
                     android:id="@+id/horizontalBarChart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     />
+
+                <com.github.mikephil.charting.charts.PieChart
+                    android:id="@+id/pie_chart"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"/>
 
             </androidx.cardview.widget.CardView>
 

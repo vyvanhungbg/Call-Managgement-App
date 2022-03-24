@@ -4,6 +4,7 @@ import static com.franky.callmanagement.utils.LogUtil.LogE;
 
 import android.content.Context;
 import android.graphics.Color;
+import android.os.Build;
 import android.util.Log;
 
 import com.franky.callmanagement.R;
@@ -16,13 +17,16 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.LineDataSet;
 
 import java.text.SimpleDateFormat;
+import java.time.Duration;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
+import java.util.Collections;
 import java.util.Date;
 import java.util.GregorianCalendar;
 import java.util.Iterator;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 import io.realm.Realm;
 import io.realm.RealmResults;
@@ -115,7 +119,7 @@ public class CallStatisticsPresenter {
     }
 
     // lấy số cuộc gọi theo ngày
-    public int getCallObjectRealmObject(Realm realm, int dayOfYear,int flag){
+    public List<CallObject> getCallObjectRealmObject(Realm realm, int dayOfYear,int flag){
         Calendar calendar = Calendar.getInstance();
         RealmResults<CallObject> callObjectRealmResults = null;
         if (realm != null && !realm.isClosed ()) {
@@ -157,7 +161,7 @@ public class CallStatisticsPresenter {
             }
 
         }
-        return list.size();
+        return list;
     }
 
     // lấy cả tuần chưa ngày hiện tại
@@ -167,8 +171,8 @@ public class CallStatisticsPresenter {
         Calendar now = Calendar.getInstance();
         final SimpleDateFormat formatOfDay = new SimpleDateFormat("dd");
         final SimpleDateFormat formatOfDayAndMonth = new SimpleDateFormat("dd/MM/yyyy");
-        String[] listDaysOfAWeek = new String[7]; //lấy ngày tháng năm theo tuần
-        int[] dayOfWeeks = new int[7]; // lấy ngày của năm
+        String[] listDaysOfAWeek = new String[7];             //lấy ngày tháng năm theo tuần
+        int[] dayOfWeeks = new int[7];                      // lấy ngày của năm
 
         delta = delta + (NEXT_TIME_LINE == flagTimeLine ? 7 : PREVIOUS_TIME_LINE == flagTimeLine ? -7 : 0); // change time line by button
 
@@ -181,13 +185,58 @@ public class CallStatisticsPresenter {
             now.add(Calendar.DAY_OF_MONTH, 1);
         }
 
-        // tính toán số cuộc gọi theo tuần
+        // tính toán số lượng cuộc gọi mỗi ngày theo tuần
+        List<List<CallObject>> list = new ArrayList<>();
         int [] numberOfCallPerDay = new int[dayOfWeeks.length];
+
         for(int i=0;i<dayOfWeeks.length;i++){
-            //  System.out.println("Ngày : "+days[i]+" có : "+ presenter.getCallObjectRealmObject(mRealm,dayOfWeeks[i]) +" cuộc gọi ");
-            numberOfCallPerDay[i] = getCallObjectRealmObject(mRealm,dayOfWeeks[i],flagFilter);
+            List<CallObject> mList = getCallObjectRealmObject(mRealm,dayOfWeeks[i],flagFilter);
+            list.add(mList);                                // danh sách lưu trữ 7 danh sách cuộc gọi tương ứng 7 ngày
+            numberOfCallPerDay[i] = mList.size();           // danh sách lưu trữ tổng số cuộc gọi của 7 ngày
         }
 
-        listener.getTimeLine(listDaysOfAWeek, dayOfWeeks, numberOfCallPerDay);
+        // Tìm số ngày có phút gọi nhiều nhất ? , số phút gọi ít nhất ? , trung bình phút gọi cả tuần
+        int []  listTotalCallSeconds = new int[dayOfWeeks.length];            // danh sách tổng giấy gọi mỗi ngày của một  tuần
+        int i=0;
+        for(List<CallObject> callListObjectForADay : list){
+            int totalCallSeconds = 0;
+            for(CallObject callObject : callListObjectForADay){
+                totalCallSeconds += (int) getTimeDurationCall(callObject);
+            }
+            listTotalCallSeconds[i++] = totalCallSeconds;
+        }
+
+
+
+        listener.getTimeLine(listDaysOfAWeek, dayOfWeeks, numberOfCallPerDay,listTotalCallSeconds );
     }
+
+
+    public long getTimeDurationCall(CallObject callObject){
+        long durationSeconds = 0;
+        Date beginDate = new Date (callObject.getBeginTimestamp ());
+        Date endDate = new Date (callObject.getEndTimestamp ());
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            try {
+                Duration duration = Duration.between (beginDate.toInstant (), endDate.toInstant ());
+                long minutes = TimeUnit.SECONDS.toMinutes (duration.getSeconds ());
+                durationSeconds = duration.getSeconds ();
+            } catch (Exception e) {
+                LogE (TAG, e.getMessage ());
+                e.printStackTrace ();
+            }
+        } else {
+            long durationMs = endDate.getTime () - beginDate.getTime ();
+            try {
+                long minutes = TimeUnit.MILLISECONDS.toMinutes (durationMs);
+                durationSeconds = TimeUnit.MILLISECONDS.toSeconds (durationMs);
+            } catch (Exception e) {
+                LogE (TAG, e.getMessage ());
+                e.printStackTrace ();
+            }
+        }
+
+        return durationSeconds;
+    }
+
 }
