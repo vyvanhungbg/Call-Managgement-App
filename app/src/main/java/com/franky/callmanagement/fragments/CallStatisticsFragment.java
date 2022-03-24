@@ -24,6 +24,7 @@ import com.github.mikephil.charting.animation.Easing;
 import com.github.mikephil.charting.charts.CombinedChart;
 import com.github.mikephil.charting.charts.HorizontalBarChart;
 import com.github.mikephil.charting.charts.PieChart;
+import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.Legend;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.components.YAxis;
@@ -36,6 +37,7 @@ import com.github.mikephil.charting.data.LineData;
 import com.github.mikephil.charting.data.PieData;
 import com.github.mikephil.charting.data.PieDataSet;
 import com.github.mikephil.charting.data.PieEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 import com.github.mikephil.charting.formatter.PercentFormatter;
 import com.github.mikephil.charting.highlight.Highlight;
@@ -44,6 +46,7 @@ import com.github.mikephil.charting.listener.OnChartValueSelectedListener;
 import com.github.mikephil.charting.utils.ColorTemplate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
 
 import io.realm.Realm;
@@ -116,9 +119,9 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
         //pie chart
 
-        pieChart = view.findViewById(R.id.pie_chart);
-        setupPieChart();
-        loadPieChartData();
+        horizontalBarChart = view.findViewById(R.id.horizontalBarChart);
+//        setupPieChart();
+//        loadPieChartData();
         return view;
     }
 
@@ -126,10 +129,11 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
 
-        createHorizontalBarChart();
+
         presenter.getTimeLine(mRealm,CallStatisticsPresenter.NOW_TIME_LINE,FLAG_FILTER_CALL);
 
         setOnClickButtonNextOrPrevious();
+
     }
 
     public void init(){
@@ -143,7 +147,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         }
     }
 
-    public void createHorizontalBarChart(){
+    public void createHorizontalBarChart(int[] listTotalCallSeconds){
 //        horizontalBarChart.setOnChartValueSelectedListener(new );
         // chart.setHighlightEnabled(false);
 
@@ -187,21 +191,35 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
         horizontalBarChart.setFitBars(true);
         horizontalBarChart.animateY(2500);
-        setData(3, 25);
+        setData(listTotalCallSeconds);
         horizontalBarChart.invalidate();
     }
 
-    private void setData(int count, float range) {
+    private void setData(int[] listTotalCallSeconds) {
 
         float barWidth = 1f;
         float spaceForBar = 3f;
         ArrayList<BarEntry> values = new ArrayList<>();
 
-        for (int i = 0; i < count; i++) {
+       /* for (int i = 0; i < count; i++) {
             float val = (float) (Math.random() * range);
             values.add(new BarEntry(i * spaceForBar, val,
                     getResources().getDrawable(R.drawable.ic_favourit_stroke)));
+        }*/
+        int nameOfDayMax = 0;
+        int max = listTotalCallSeconds[nameOfDayMax];
+        int sum = 0;
+        for(int i=0;i<listTotalCallSeconds.length;i++){
+            if(max < listTotalCallSeconds[i]){
+                max = listTotalCallSeconds[i];
+                nameOfDayMax = i;
+            }
+            sum+= listTotalCallSeconds[i];
         }
+
+        values.add(new BarEntry(0*spaceForBar, max));
+        values.add(new BarEntry(1*spaceForBar, sum));
+        values.add(new BarEntry(2*spaceForBar,  (sum*1.0F/listTotalCallSeconds.length)));
 
         BarDataSet set1;
 
@@ -212,7 +230,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
             horizontalBarChart.getData().notifyDataChanged();
             horizontalBarChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(values, "Phút gọi");
+            set1 = new BarDataSet(values, "Giây gọi");
 
             set1.setDrawIcons(false);
 
@@ -225,7 +243,20 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
             data.setBarWidth(barWidth);
             horizontalBarChart.setData(data);
         }
+
+        XAxis xAxis = horizontalBarChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setGranularity(1f);
+        List<String> label= new ArrayList<>();
+        label.add("Ngày ");
+        label.add("Tổng ");
+        label.add("Trung  :");
+
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(label));
+
+        set1.setColors(Color.RED);
     }
+
 
 
 
@@ -322,6 +353,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
 
         presenter.getDataForCombinedChart(requireContext(),numberOfCallPerDay);
+        createHorizontalBarChart(listTotalCallSeconds);
     }
 
     public void setOnClickButtonNextOrPrevious(){

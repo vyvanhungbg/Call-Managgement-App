@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="../../../../../../../layout/custom_preview.xml" value="0.19895833333333332" />
+        <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/drawable-v24/ic_favourit_stroke.xml" value="0.1525" />
         <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/drawable-v24/ic_menu_dots_24.xml" value="0.148" />
         <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/drawable-v24/s_thumb_selector.xml" value="0.106" />
         <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/drawable/bg_background_header_toolbar.xml" value="0.106" />
@@ -18,7 +19,7 @@
         <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/drawable/layout_next_previous_time_line.xml" value="0.148" />
         <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/drawable/logo_app.xml" value="0.106" />
         <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/layout/activity_call.xml" value="0.13802083333333334" />
-        <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/layout/activity_splash_screen.xml" value="0.10400000000000001" />
+        <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/layout/activity_splash_screen.xml" value="0.2" />
         <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/layout/fragment_all_call.xml" value="0.12360688956433637" />
         <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/layout/fragment_call_statistics.xml" value="0.12360688956433637" />
         <entry key="..\:/Code/Android/Call-Managgement-App/app/src/main/res/layout/test.xml" value="0.264" />

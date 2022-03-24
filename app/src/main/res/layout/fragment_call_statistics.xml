@@ -109,16 +109,15 @@
                 app:cardElevation="5dp"
                 app:cardPreventCornerOverlap="false">
                 <com.github.mikephil.charting.charts.HorizontalBarChart
-                    android:visibility="gone"
                     android:id="@+id/horizontalBarChart"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     />
-
+<!--
                 <com.github.mikephil.charting.charts.PieChart
                     android:id="@+id/pie_chart"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"/>
+                    android:layout_width="@dimen/_120sdp"
+                    android:layout_height="@dimen/_80sdp"/>-->
 
             </androidx.cardview.widget.CardView>
 
