@@ -3,6 +3,7 @@ package com.franky.callmanagement.activities;
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -16,6 +17,9 @@ import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
 import android.telecom.Call;
+import android.telecom.TelecomManager;
+import android.telephony.TelephonyManager;
+import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 
@@ -30,13 +34,14 @@ import com.franky.callmanagement.services.MainService;
 import com.franky.callmanagement.utils.AppUtil;
 import com.franky.callmanagement.utils.RequestIgnoreBatteryOptimizationsUtil;
 import com.google.android.material.navigation.NavigationBarView;
+
 import static com.franky.callmanagement.utils.LogUtil.LogD;
 import static com.franky.callmanagement.utils.LogUtil.LogE;
 import static com.franky.callmanagement.utils.LogUtil.LogI;
 
 import java.util.ArrayList;
 
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity {
 
     private static final String TAG = MainActivity.class.getSimpleName();
     private ActivityMainBinding binding;
@@ -57,6 +62,9 @@ public class MainActivity extends AppCompatActivity  {
 
         customFragmentManager();
         onClickNavigationBar();
+
+       
+
     }
 
     // Thêm các fragment vào fragmentManager

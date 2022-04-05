@@ -43,7 +43,7 @@ public class ManagerPhoneStateReceiver extends BroadcastReceiver {
 
     public void ReceiveSuccessful(Context context, Intent intent){
 
-        // Trạng thá hệ thống bình thường
+        // Trạng thái hệ thống bình thường
         TelephonyManager telephonyManager = null;
         try {
             telephonyManager = (TelephonyManager) context.getSystemService (Context.TELEPHONY_SERVICE);
@@ -161,6 +161,7 @@ public class ManagerPhoneStateReceiver extends BroadcastReceiver {
         intent.setClass (context, CallRecorderService.class);
         intent.putExtra (AppConstants.INTENT_ACTION_INCOMING_CALL, isIncoming);
         intent.putExtra (AppConstants.INTENT_ACTION_OUTGOING_CALL, isOutgoing);
+        LogE(TAG, "Detect type call "+(isIncoming?"incoming":"outgoing"));
         try {
             context.startService (intent);
         } catch (Exception e) {

@@ -13,6 +13,9 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.drawable.Drawable;
 import android.graphics.drawable.Icon;
 import android.os.Build;
 import android.os.IBinder;
@@ -27,6 +30,7 @@ import com.franky.callmanagement.env.AppConstants;
 import com.franky.callmanagement.receivers.ManagerPhoneStateReceiver;
 import com.franky.callmanagement.utils.AppUtil;
 
+// class chính luôn lắng nghe khi app đươc bật
 public class MainService extends Service {
     private static final String TAG = MainService.class.getSimpleName();
     private static final int FOREGROUND_NOTIFICATION_ID =1;
@@ -67,7 +71,7 @@ public class MainService extends Service {
             e.printStackTrace ();
         }
         if (notificationManager != null) {
-            CharSequence contentTitle = "Running...", contentText = getString (R.string.app_name) + " is active.";
+            CharSequence contentText = getString(R.string.running)+"...", contentTitle  = getString (R.string.app_name) + " "+getString(R.string.active);
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                 try {
                     notificationChannel = new NotificationChannel (getString (R.string.service) + "-" + FOREGROUND_NOTIFICATION_ID, getString (R.string.service), NotificationManager.IMPORTANCE_NONE);
@@ -85,7 +89,8 @@ public class MainService extends Service {
                         e.printStackTrace ();
                     }
                     Icon logoIcon = Icon.createWithResource (this, R.drawable.ic_stat_name);
-                    Icon largeIcon = Icon.createWithResource (this, R.mipmap.ic_launcher);
+                    Icon largeIcon = Icon.createWithResource (this, R.drawable.ic_application);
+
                     try {
                         startForeground (FOREGROUND_NOTIFICATION_ID, new Notification.Builder (this, getString (R.string.service) + "-" + FOREGROUND_NOTIFICATION_ID)
                                 .setSmallIcon (logoIcon)
@@ -103,7 +108,7 @@ public class MainService extends Service {
                 Notification.Builder builder = new Notification.Builder (this);
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
                     Icon logoIcon = Icon.createWithResource (this, R.drawable.ic_stat_name);
-                    Icon largeIcon = Icon.createWithResource (this, R.mipmap.ic_launcher);
+                    Icon largeIcon = Icon.createWithResource (this, R.drawable.ic_application);
                     builder.setSmallIcon (logoIcon);
                     builder.setLargeIcon (largeIcon);
                 } else {

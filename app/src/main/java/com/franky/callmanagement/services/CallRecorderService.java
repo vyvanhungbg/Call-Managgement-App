@@ -63,8 +63,9 @@ public class CallRecorderService extends Service {
     private MediaRecorder mediaRecorder = null;
     private boolean vibrate = true, turnOnSpeaker = false, maxUpVolume = true;
     private int voiceCallStreamVolume = -1;
-    private CallObject incomingCallObject = null;
-    private CallObject outgoingCallObject = null;
+    private CallObject callObject = null;
+   // private CallObject incomingCallObject = null;
+    //private CallObject outgoingCallObject = null;
     private boolean favorite = false;
 
     @Override
@@ -201,42 +202,38 @@ public class CallRecorderService extends Service {
 
 
 
-            if (false) {
-                    LogE(TAG, " MÁY vượt cấp");
-            } else {
-                // luuw trữ thông tin
-                if (intent.hasExtra (TelephonyManager.EXTRA_INCOMING_NUMBER)) {
-                    phoneStateIncomingNumber = intent.getStringExtra (TelephonyManager.EXTRA_INCOMING_NUMBER);
-                    LogE (TAG, "-------phoneStateIncomingNumber " + phoneStateIncomingNumber);
+            // Kiểm tra số điện thoại gọi đến phải thuộc danh sách yêu thích không
+            if (intent.hasExtra (TelephonyManager.EXTRA_INCOMING_NUMBER)) {
+                phoneStateIncomingNumber = intent.getStringExtra (TelephonyManager.EXTRA_INCOMING_NUMBER);
+                LogE (TAG, "-------phoneStateIncomingNumber " + phoneStateIncomingNumber);
 
-                    Realm realmf = null;
+                Realm realmf = null;
+                try {
+                    realmf = Realm.getDefaultInstance ();
+                } catch (Exception e) {
+                    e.printStackTrace ();
+                }
+
+                if (realmf != null && !realmf.isClosed ()) {
                     try {
-                        realmf = Realm.getDefaultInstance ();
+                        realmf.beginTransaction ();
+                        CallObject object = realmf.where (CallObject.class)
+                                .equalTo ("mPhoneNumber", phoneStateIncomingNumber)
+                                .findFirst ();
+                        if (object != null) {
+                            favorite = object.isFavourite ();
+                            realmf.commitTransaction ();
+                        } else {
+                            realmf.cancelTransaction ();
+                        }
+                        realmf.close ();
                     } catch (Exception e) {
                         e.printStackTrace ();
                     }
+                }
 
-                    if (realmf != null && !realmf.isClosed ()) {
-                        try {
-                            realmf.beginTransaction ();
-                            CallObject object = realmf.where (CallObject.class)
-                                    .equalTo ("mPhoneNumber", phoneStateIncomingNumber)
-                                    .findFirst ();
-                            if (object != null) {
-                                favorite = object.isFavourite ();
-                                realmf.commitTransaction ();
-                            } else {
-                                realmf.cancelTransaction ();
-                            }
-                            realmf.close ();
-                        } catch (Exception e) {
-                            e.printStackTrace ();
-                        }
-                    }
-
-                    if (!phoneStateIncomingNumber.trim ().isEmpty ()) {
-                        LogE (TAG, "Phone state incoming number: " + phoneStateIncomingNumber);
-                    }
+                if (!phoneStateIncomingNumber.trim ().isEmpty ()) {
+                    LogE (TAG, "Phone state incoming number: " + phoneStateIncomingNumber);
                 }
             }
 
@@ -277,9 +274,9 @@ public class CallRecorderService extends Service {
     @SuppressLint("HardwareIds")
     @RequiresPermission(Manifest.permission.RECORD_AUDIO)
     public void beginRecorder (@Nullable Integer audioSource, @Nullable Integer outputFormat, @Nullable Integer audioEncoder) {
-        if (mediaRecorder != null) {
+       /* if (mediaRecorder != null) {
             return;
-        }
+        }*/
         long beginTimestamp = new Date().getTime ();
         if (sharedPreferences != null) {
             if (audioSource == null) {
@@ -326,6 +323,7 @@ public class CallRecorderService extends Service {
         if (isOutgoing) {
             type = "--0-";
         }
+        // xác định vị trí lưu
         String valueExternal = getResources ().getStringArray (R.array.records_output_location_entry_values)[ 0 ];
         String valueInternal = getResources ().getStringArray (R.array.records_output_location_entry_values)[ 1 ];
 
@@ -346,6 +344,7 @@ public class CallRecorderService extends Service {
         }
         String outputFilePath = recordsOutputDirectoryPath + File.separator + phoneStateIncomingNumber + type + beginTimestamp;
         LogE (TAG, "outputFilePath :" + outputFilePath);
+
         try {
             mediaRecorder = new MediaRecorder ();
         } catch (Exception e) {
@@ -380,6 +379,8 @@ public class CallRecorderService extends Service {
             if (!start) {
                 LogI (TAG, "Media recorder (telephony) has start exception");
             }
+
+            // Nếu audiosource không thỏa mãn thì tự đồng tìm audiosouces thỏa mãn ghi âm được
             for (int otherAudioSource : CallRecorderConfig.getAudioSources ()) {
                 if (otherAudioSource == audioSource) {
                     continue;
@@ -514,66 +515,15 @@ public class CallRecorderService extends Service {
                 networkCountryIso = "-";
             }
         }
+
+        // lưu cuộc gọi
         if (realm != null && !realm.isClosed ()) {
-            final String finalSimSerialNumber = simSerialNumber;
-            final String finalSimOperator = simOperator;
-            final String finalSimOperatorName = simOperatorName;
-            final String finalSimCountryIso = simCountryIso;
-            final String finalNetworkOperator = networkOperator;
-            final String finalNetworkOperatorName = networkOperatorName;
-            final String finalNetworkCountryIso = networkCountryIso;
-            final int finalAudioSource = audioSource;
-            final int finalOutputFormat = outputFormat;
-            final int finalAudioEncoder = audioEncoder;
-            final String finalOutputFilePath = outputFilePath;
             try {
                 if (isIncoming) {
-                    realm.executeTransaction (realm -> {
-                        incomingCallObject = realm.createObject (CallObject.class);
-                        LogE (TAG, "inc phoneStateIncomingNumber " + phoneStateIncomingNumber);
-                        LogE (TAG, "inc beginTimestamp" + beginTimestamp);
-                        if (incomingCallObject != null) {
-                            incomingCallObject.setPhoneNumber (phoneStateIncomingNumber);
-                            incomingCallObject.setBeginTimestamp (beginTimestamp);
-                            incomingCallObject.setSimOperator (finalSimOperator);
-                            incomingCallObject.setSimSerialNumber (finalSimSerialNumber);
-                            incomingCallObject.setSimOperatorName (finalSimOperatorName);
-                            incomingCallObject.setSimCountryIso (finalSimCountryIso);
-                            incomingCallObject.setNetworkOperator (finalNetworkOperator);
-                            incomingCallObject.setNetworkOperatorName (finalNetworkOperatorName);
-                            incomingCallObject.setNetworkCountryIso (finalNetworkCountryIso);
-                            incomingCallObject.setAudioSource (finalAudioSource);
-                            incomingCallObject.setOutputFormat (finalOutputFormat);
-                            incomingCallObject.setAudioEncoder (finalAudioEncoder);
-                            incomingCallObject.setOutputFile (finalOutputFilePath);
-                            incomingCallObject.setType (AppConstants.TYPE_INCOMING_CALL);
-                            incomingCallObject.setFavourite (favorite);
-                        }
-                    });
+                    SaveCalObjectToDatabase(AppConstants.TYPE_INCOMING_CALL,beginTimestamp, simSerialNumber, simOperator, simOperatorName, simCountryIso, networkOperator, networkOperatorName, networkCountryIso, audioSource, outputFormat, audioEncoder, outputFilePath);
                 }
                 if (isOutgoing) {
-                    realm.executeTransaction (realm -> {
-                        outgoingCallObject = realm.createObject (CallObject.class);
-                        LogE (TAG, "out phoneStateIncomingNumber " + phoneStateIncomingNumber);
-                        LogE (TAG, "out beginTimestamp" + beginTimestamp);
-                        if (outgoingCallObject != null) {
-                            outgoingCallObject.setPhoneNumber (phoneStateIncomingNumber);
-                            outgoingCallObject.setBeginTimestamp (beginTimestamp);
-                            outgoingCallObject.setAudioSource (finalAudioSource);
-                            outgoingCallObject.setSimSerialNumber (finalSimSerialNumber);
-                            outgoingCallObject.setSimOperator (finalSimOperator);
-                            outgoingCallObject.setSimOperatorName (finalSimOperatorName);
-                            outgoingCallObject.setSimCountryIso (finalSimCountryIso);
-                            outgoingCallObject.setNetworkOperator (finalNetworkOperator);
-                            outgoingCallObject.setNetworkOperatorName (finalNetworkOperatorName);
-                            outgoingCallObject.setNetworkCountryIso (finalNetworkCountryIso);
-                            outgoingCallObject.setOutputFormat (finalOutputFormat);
-                            outgoingCallObject.setAudioEncoder (finalAudioEncoder);
-                            outgoingCallObject.setOutputFile (finalOutputFilePath);
-                            outgoingCallObject.setType (AppConstants.TYPE_OUTGOING_CALL);
-                            outgoingCallObject.setFavourite (favorite);
-                        }
-                    });
+                    SaveCalObjectToDatabase(AppConstants.TYPE_OUTGOING_CALL,beginTimestamp, simSerialNumber, simOperator, simOperatorName, simCountryIso, networkOperator, networkOperatorName, networkCountryIso, audioSource, outputFormat, audioEncoder, outputFilePath);
                 }
             } catch (Exception e) {
                 LogE (TAG, e.getMessage ());
@@ -582,8 +532,31 @@ public class CallRecorderService extends Service {
             }
         }
     }
-    
-    
+
+    private void SaveCalObjectToDatabase(String typeCall,long beginTimestamp, String finalSimSerialNumber, String finalSimOperator, String finalSimOperatorName, String finalSimCountryIso, String finalNetworkOperator, String finalNetworkOperatorName, String finalNetworkCountryIso, int finalAudioSource, int finalOutputFormat, int finalAudioEncoder, String finalOutputFilePath) {
+        realm.executeTransaction (realm -> {
+            callObject = realm.createObject (CallObject.class);
+            LogE (TAG, "info phoneStateNumber " + phoneStateIncomingNumber);
+            LogE (TAG, "info beginTimestamp" + beginTimestamp);
+            if (callObject != null) {
+                callObject.setPhoneNumber (phoneStateIncomingNumber);
+                callObject.setBeginTimestamp (beginTimestamp);
+                callObject.setSimOperator (finalSimOperator);
+                callObject.setSimSerialNumber (finalSimSerialNumber);
+                callObject.setSimOperatorName (finalSimOperatorName);
+                callObject.setSimCountryIso (finalSimCountryIso);
+                callObject.setNetworkOperator (finalNetworkOperator);
+                callObject.setNetworkOperatorName (finalNetworkOperatorName);
+                callObject.setNetworkCountryIso (finalNetworkCountryIso);
+                callObject.setAudioSource (finalAudioSource);
+                callObject.setOutputFormat (finalOutputFormat);
+                callObject.setAudioEncoder (finalAudioEncoder);
+                callObject.setOutputFile (finalOutputFilePath);
+                callObject.setType (typeCall);
+                callObject.setFavourite (favorite);
+            }
+        });
+    }
 
 
     // Lắng nghe quá trình ghi âm
@@ -661,6 +634,7 @@ public class CallRecorderService extends Service {
                 }
             }
         }
+        // set rung khi bắt đầu và kết thúc cuộc ghi thoại
         if (vibrate) {
             if (ContextCompat.checkSelfPermission (this, Manifest.permission.VIBRATE) == PackageManager.PERMISSION_GRANTED) {
                 if (vibrator != null) {
@@ -711,16 +685,13 @@ public class CallRecorderService extends Service {
         }
         if (realm != null && !realm.isClosed ()) {
             try {
-                if (incomingCallObject != null) {
+                // set thời gian kết thúc
+                if (callObject != null) {
                     LogE (TAG, "inc endTimestamp" + endTimestamp);
-                    realm.executeTransaction (realm -> incomingCallObject.setEndTimestamp (endTimestamp));
-                    incomingCallObject = null;
+                    realm.executeTransaction (realm -> callObject.setEndTimestamp (endTimestamp));
+                    callObject = null;
                 }
-                if (outgoingCallObject != null) {
-                    LogE (TAG, "out endTimestamp" + endTimestamp);
-                    realm.executeTransaction (realm -> outgoingCallObject.setEndTimestamp (endTimestamp));
-                    outgoingCallObject = null;
-                }
+
             } catch (Exception e) {
                 LogE (TAG, e.getMessage ());
                 LogE (TAG, e.toString ());

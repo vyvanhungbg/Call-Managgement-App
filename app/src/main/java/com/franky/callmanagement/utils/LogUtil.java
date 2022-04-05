@@ -12,16 +12,16 @@ public class LogUtil {
     
     // ghi lại luồng chương trình
     public static void LogD(String tag, String message){
-        int numberOfLine = Thread.currentThread().getStackTrace()[2].getLineNumber();
+        //int numberOfLine = Thread.currentThread().getStackTrace()[2].getLineNumber();
         if(tag == null || message ==null){
-            LogE(TAG, getLineCurrent(numberOfLine)+"TAG or message of class "+TAG+" is null");
+            LogE(TAG, "TAG or message of class "+TAG+" is null");
             return;
         }
         if(tag.length()>22){
             tag = tag.substring(0,22);
         }
         if(AppConfig.ENABLE_LOG ){
-            Log.d(tag, getLineCurrent(numberOfLine) + message);
+            Log.d(tag,  message);
         }
     }
 
