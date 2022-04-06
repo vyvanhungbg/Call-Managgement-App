@@ -29,7 +29,7 @@ public class LogUtil {
     public static void LogE(String tag, String message){
         int numberOfLine = Thread.currentThread().getStackTrace()[2].getLineNumber();
         if(tag == null || message ==null){
-            LogE(TAG, Thread.currentThread().getStackTrace()[2].getLineNumber()+"TAG or message of class "+TAG+" is null");
+            LogE(TAG, "TAG or message of class "+TAG+" is null");
             return;
         }
 
@@ -37,7 +37,7 @@ public class LogUtil {
             tag = tag.substring(0,22);
         }
         if(AppConfig.ENABLE_LOG){
-            Log.e(tag,Thread.currentThread().getStackTrace()[2].getLineNumber() + message);
+            Log.e(tag,  message);
         }
     }
 
@@ -46,7 +46,7 @@ public class LogUtil {
     public static void LogI ( String tag, String message) {
         int numberOfLine = Thread.currentThread().getStackTrace()[2].getLineNumber();
         if(tag == null || message ==null){
-            LogE(TAG, getLineCurrent(numberOfLine)+"TAG or message of class "+TAG+" is null");
+            LogE(TAG, "TAG or message of class "+TAG+" is null");
             return;
         }
 
@@ -54,7 +54,7 @@ public class LogUtil {
             tag = tag.substring(0,22);
         }
         if (AppConfig.ENABLE_LOG) {
-            Log.i (tag,getLineCurrent(numberOfLine) + message);
+            Log.i (tag,message);
         }
     }
 
@@ -62,7 +62,7 @@ public class LogUtil {
     public static void LogW ( String tag, String message) {
         int numberOfLine = Thread.currentThread().getStackTrace()[2].getLineNumber();
         if(tag == null || message ==null){
-            LogE(TAG, getLineCurrent(numberOfLine)+"TAG or message of class "+TAG+" is null");
+            LogE(TAG, "TAG or message of class "+TAG+" is null");
             return;
         }
 
@@ -70,7 +70,7 @@ public class LogUtil {
             tag = tag.substring(0,22);
         }
         if (AppConfig.ENABLE_LOG) {
-            Log.w (tag,getLineCurrent(numberOfLine) + message);
+            Log.w (tag,message);
         }
     }
 

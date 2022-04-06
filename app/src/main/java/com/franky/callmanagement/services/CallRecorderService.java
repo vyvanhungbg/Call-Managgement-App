@@ -37,6 +37,7 @@ import com.franky.callmanagement.env.AppConstants;
 import com.franky.callmanagement.models.CallObject;
 
 import java.io.File;
+import java.util.Calendar;
 import java.util.Date;
 
 import io.realm.Realm;
@@ -534,6 +535,7 @@ public class CallRecorderService extends Service {
     }
 
     private void SaveCalObjectToDatabase(String typeCall,long beginTimestamp, String finalSimSerialNumber, String finalSimOperator, String finalSimOperatorName, String finalSimCountryIso, String finalNetworkOperator, String finalNetworkOperatorName, String finalNetworkCountryIso, int finalAudioSource, int finalOutputFormat, int finalAudioEncoder, String finalOutputFilePath) {
+       
         realm.executeTransaction (realm -> {
             callObject = realm.createObject (CallObject.class);
             LogE (TAG, "info phoneStateNumber " + phoneStateIncomingNumber);

@@ -25,6 +25,7 @@ public class CallObject extends RealmObject {
     private String mCorrespondentName = null;
 
 
+
     public CallObject () {
     }
 
@@ -61,7 +62,7 @@ public class CallObject extends RealmObject {
                        int audioSource, int outputFormat, int audioEncoder,
                        String outputFile,
                        String type,
-                       boolean favourite) {
+                       boolean favourite,int year) {
         mPhoneNumber = phoneNumber;
         mBeginTimestamp = beginTimestamp;
         mEndTimestamp = endTimestamp;
@@ -78,6 +79,7 @@ public class CallObject extends RealmObject {
         mOutputFile = outputFile;
         this.type = type;
         this.favourite = favourite;
+
     }
 
 
@@ -85,6 +87,8 @@ public class CallObject extends RealmObject {
         mIsHeader = isHeader;
         mHeaderTitle = headerTitle;
     }
+
+
 
 
     public String getPhoneNumber () {
@@ -227,7 +231,6 @@ public class CallObject extends RealmObject {
     public void setOutputFile (String outputFile) {
         mOutputFile = outputFile;
     }
-
 
 
 

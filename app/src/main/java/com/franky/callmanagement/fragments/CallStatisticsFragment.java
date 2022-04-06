@@ -168,10 +168,18 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
         XAxis xl = horizontalBarChart.getXAxis();
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
-        //xl.setTypeface(tfLight);
         xl.setDrawAxisLine(true);
         xl.setDrawGridLines(false);
-        xl.setGranularity(10f);
+        xl.setGranularity(1);
+        xl.setGranularityEnabled(true);
+
+
+
+        List<String> label= new ArrayList<>();
+        label.add("Label 1 :");
+        label.add("Label 2 :");
+        label.add("Label 3 :");
+        xl.setValueFormatter(new IndexAxisValueFormatter(label));
 
         YAxis yl = horizontalBarChart.getAxisLeft();
         //yl.setTypeface(tfLight);
@@ -187,12 +195,20 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yr.setInverted(true);
 
-
+        Legend l = horizontalBarChart.getLegend();
+        l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+        l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
+        l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
+        l.setDrawInside(false);
+        l.setFormSize(8f);
+        l.setXEntrySpace(4f);
 
         horizontalBarChart.setFitBars(true);
         horizontalBarChart.animateY(2500);
         setData(listTotalCallSeconds);
         horizontalBarChart.invalidate();
+
+
     }
 
     private void setData(int[] listTotalCallSeconds) {
@@ -217,11 +233,12 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
             sum+= listTotalCallSeconds[i];
         }
 
-        values.add(new BarEntry(0*spaceForBar, max));
-        values.add(new BarEntry(1*spaceForBar, sum));
-        values.add(new BarEntry(2*spaceForBar,  (sum*1.0F/listTotalCallSeconds.length)));
+        values.add(new BarEntry(0, max));
+        values.add(new BarEntry(1, sum));
+        values.add(new BarEntry(2,  (sum*1.0F/listTotalCallSeconds.length)));
 
         BarDataSet set1;
+
 
         if (horizontalBarChart.getData() != null &&
                 horizontalBarChart.getData().getDataSetCount() > 0) {
@@ -230,7 +247,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
             horizontalBarChart.getData().notifyDataChanged();
             horizontalBarChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(values, "Giây gọi");
+            set1 = new BarDataSet(values, "Seconds");
 
             set1.setDrawIcons(false);
 
@@ -244,17 +261,10 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
             horizontalBarChart.setData(data);
         }
 
-        XAxis xAxis = horizontalBarChart.getXAxis();
-        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
-        xAxis.setGranularity(1f);
-        List<String> label= new ArrayList<>();
-        label.add("Ngày ");
-        label.add("Tổng ");
-        label.add("Trung  :");
-
-        xAxis.setValueFormatter(new IndexAxisValueFormatter(label));
+       // horizontalBarChart.set
 
         set1.setColors(Color.RED);
+
     }
 
 

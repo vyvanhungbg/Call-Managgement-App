@@ -85,7 +85,9 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
 
     }
 
-    private AllCallRecyclerAdapter populateAdapter (@NonNull Context context, @NonNull List<CallObject> callObjectList, int dayOfYearSelected) {
+    private AllCallRecyclerAdapter populateAdapter (@NonNull Context context, @NonNull List<CallObject> callObjectList, List<Integer> selected) {
+        int dayOfYearSelected = selected.get(0); // ngày đang chọn
+        int yearSelected = selected.get(1);// năm đang chọn
         Calendar calendar = Calendar.getInstance ();
 
         // filter theo ngày trên time line để hiệnt hị lên màn hình
@@ -93,11 +95,15 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
         if (!callObjectList.isEmpty ()) {
             list.add (new CallObject (true, "Tất cả"));
             for (Iterator<CallObject> iterator = callObjectList.iterator (); iterator.hasNext () ; ) {
-                CallObject incomingCallObject = iterator.next ();
-                calendar.setTime (new Date (incomingCallObject.getBeginTimestamp ()));
-                if (calendar.get (Calendar.DAY_OF_YEAR) == dayOfYearSelected) {
+                CallObject callObject = iterator.next ();
+
+                calendar.setTime (new Date (callObject.getBeginTimestamp ()));
+               // LogE(TAG,"Year selected :"+yearSelected);
+              //  LogE(TAG,"Year of calender object call :"+calendar.get(Calendar.YEAR));
+
+                if (calendar.get (Calendar.DAY_OF_YEAR) == dayOfYearSelected && calendar.get(Calendar.YEAR) == yearSelected) { // đã fix filter theo hằng năm
                     iterator.remove ();
-                    list.add (incomingCallObject);
+                    list.add (callObject);
                 }
             }
 
@@ -172,7 +178,7 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
             isDaySelected = 6;
         }
 
-        LogE(TAG,"Selected day "+isDaySelected);
+       // LogE(TAG,"Selected day "+isDaySelected);
 
     }
 
@@ -231,9 +237,9 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
         }
         binding.tvFromDayToDay.setText(days[0]+ " --> "+days[6]);
 
-        LogE(TAG,"Selected day in time line "+days[isDaySelected]);
+       // LogE(TAG,"Selected day in time line "+days[isDaySelected]);
 
-        LogE(TAG," time line "+Arrays.toString(days));
+       // LogE(TAG," time line "+Arrays.toString(days));
 
     }
 
@@ -250,7 +256,7 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
             mCallObjectRealmResults.addChangeListener (incomingCallObjectRealmResults -> {
                 if (binding.fragmentAllCallRecyclerView != null) {
                     setAdapter (populateAdapter (binding.fragmentAllCallRecyclerView.getContext (), presenter.convertRealmResultsToList(mRealm,incomingCallObjectRealmResults), presenter.getDayOfYearSelected(timeline,isDaySelected)));
-                    LogE(TAG,"List Realm Resuls change listener");
+                    //LogE(TAG,"List Realm Resuls change listener");
                 }
 
             });

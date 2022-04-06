@@ -305,10 +305,12 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
         }
 
         String beginTimeDate = null, endTimeDate = null;
+
         if (!DateFormat.is24HourFormat (this)) {
             try {
                 beginTimeDate = new SimpleDateFormat ("dd-MM-yyyy hh:mm a", Locale.getDefault ()).format (new Date (callObject.getBeginTimestamp ()));
                 endTimeDate = new SimpleDateFormat ("dd-MM-yyyy hh:mm a", Locale.getDefault ()).format (new Date (callObject.getEndTimestamp ()));
+
             } catch (Exception e) {
                 LogE (TAG, e.getMessage ());
                 e.printStackTrace ();

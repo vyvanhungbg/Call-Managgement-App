@@ -76,9 +76,9 @@ public class AllCallPresenter {
         }
     }
 
-    public int getDayOfYearSelected(String timeline[] , int isDaySelected){
+    public List<Integer> getDayOfYearSelected(String timeline[] , int isDaySelected){
         Calendar calendar = Calendar.getInstance();
-        int yearSelected, monthSelected, daySelected;
+        int yearSelected = calendar.get(Calendar.YEAR), monthSelected, daySelected;
         String timeLineSelected = timeline[isDaySelected];
         try {
             String [] str = timeLineSelected.split("/");
@@ -86,12 +86,19 @@ public class AllCallPresenter {
             monthSelected = Integer.parseInt(str[1]);
             yearSelected = Integer.parseInt(str[2]);
             calendar.set(yearSelected,monthSelected-1,daySelected);
-            LogE(TAG, "get Day of Year selec "+calendar.get(Calendar.DAY_OF_YEAR));
-            return calendar.get(Calendar.DAY_OF_YEAR);
+            //LogE(TAG, "get Day of Year selec "+calendar.get(Calendar.DAY_OF_YEAR));
+
+            List<Integer> list = new ArrayList<>();  // trả về cùng lúc 2 phần tử cho truy vấn . Không dùng được List.Of API<<
+            list.add(calendar.get(Calendar.DAY_OF_YEAR));
+            list.add(yearSelected);
+            return  list;
         }catch (Exception e){
             LogE(TAG,e.getMessage());
             e.printStackTrace();
-            return calendar.get(Calendar.DAY_OF_YEAR);
+            List<Integer> list = new ArrayList<>();
+            list.add(calendar.get(Calendar.DAY_OF_YEAR));
+            list.add(yearSelected);
+            return  list;
         }
 
     }
