@@ -33,6 +33,7 @@ import com.franky.callmanagement.fragments.HomeFragment;
 import com.franky.callmanagement.fragments.SettingsFragment;
 import com.franky.callmanagement.services.MainService;
 import com.franky.callmanagement.utils.AppUtil;
+import com.franky.callmanagement.utils.BackupDataUtil;
 import com.franky.callmanagement.utils.RequestIgnoreBatteryOptimizationsUtil;
 import com.google.android.material.navigation.NavigationBarView;
 
@@ -67,7 +68,8 @@ public class MainActivity extends AppCompatActivity {
 
         customFragmentManager();
         onClickNavigationBar();
-
+        BackupDataUtil backupDataUtil = new BackupDataUtil();
+        //backupDataUtil.shareFile(getApplicationContext());
        
 
     }

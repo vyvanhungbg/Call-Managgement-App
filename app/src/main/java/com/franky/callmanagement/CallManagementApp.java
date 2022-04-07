@@ -28,9 +28,6 @@ public class CallManagementApp extends Application {
     public void onCreate () {
 
 
-
-
-
         AppConstants.sFilesDirMemory = getFilesDir ();
         AppConstants.sFilesDirPathMemory = getFilesDir ().getPath ();
         AppConstants.sCacheDirMemory = getCacheDir ();
