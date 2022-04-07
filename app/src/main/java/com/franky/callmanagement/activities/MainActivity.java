@@ -13,6 +13,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.os.PowerManager;
@@ -39,7 +40,11 @@ import static com.franky.callmanagement.utils.LogUtil.LogD;
 import static com.franky.callmanagement.utils.LogUtil.LogE;
 import static com.franky.callmanagement.utils.LogUtil.LogI;
 
+import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
+
+import io.realm.Realm;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,6 +71,9 @@ public class MainActivity extends AppCompatActivity {
        
 
     }
+
+
+
 
     // Thêm các fragment vào fragmentManager
     private void customFragmentManager(){

@@ -35,6 +35,7 @@
         <activity
             android:name=".activities.SplashScreen"
             android:screenOrientation="locked"
+            android:theme="@style/Theme.CallManagement"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
