@@ -4,6 +4,8 @@ import static com.franky.callmanagement.utils.LogUtil.LogD;
 import static com.franky.callmanagement.utils.LogUtil.LogE;
 
 import android.app.Application;
+import android.app.NotificationChannel;
+import android.app.NotificationManager;
 import android.content.ComponentCallbacks2;
 import android.os.Build;
 
@@ -21,13 +23,14 @@ import io.realm.RealmMigration;
 public class CallManagementApp extends Application {
 
     private static final String TAG = CallManagementApp.class.getSimpleName();
+    public static final String CHANNEL_ID_LOCAL_NOTIFICATIONS  ="CHANNEL_LOCAL";
     private final RealmMigration mRealmMigration = (realm, oldVersion, newVersion) -> {
     };
 
     @Override
     public void onCreate () {
 
-
+        createChanelNotification();
         AppConstants.sFilesDirMemory = getFilesDir ();
         AppConstants.sFilesDirPathMemory = getFilesDir ().getPath ();
         AppConstants.sCacheDirMemory = getCacheDir ();
@@ -78,6 +81,16 @@ public class CallManagementApp extends Application {
 
                         .build());
 
+    }
+
+    private void createChanelNotification() {
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+            NotificationChannel channelLC = new NotificationChannel(CHANNEL_ID_LOCAL_NOTIFICATIONS,"Notification Local", NotificationManager.IMPORTANCE_HIGH);
+            NotificationManager manager = getSystemService(NotificationManager.class);
+            if(manager != null){
+                manager.createNotificationChannel(channelLC);
+            }
+        }
     }
 
     @Override
