@@ -31,7 +31,11 @@
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
-        android:theme="@style/Theme.CallManagement">
+        android:fullBackupContent="@xml/backup_rules"
+        android:backupAgent=".utils.CustomBackupAgent"
+        android:backupInForeground="true"
+        android:theme="@style/Theme.CallManagement"
+        tools:targetApi="n">
         <activity
             android:name=".activities.SplashScreen"
             android:screenOrientation="locked"

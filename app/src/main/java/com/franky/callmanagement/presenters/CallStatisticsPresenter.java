@@ -109,6 +109,9 @@ public class CallStatisticsPresenter {
         }
     }
 
+
+
+
     // convert realmObject về List object
     public List<CallObject> convertRealmResultsToList(Realm mRealm,RealmResults<CallObject> mCallObjectRealmResults){
         if (mRealm != null) {
@@ -145,6 +148,7 @@ public class CallStatisticsPresenter {
             }
 
         }
+
 
         List<CallObject> callObjectList = convertRealmResultsToList(realm,callObjectRealmResults);
 
@@ -195,7 +199,7 @@ public class CallStatisticsPresenter {
             numberOfCallPerDay[i] = mList.size();           // danh sách lưu trữ tổng số cuộc gọi của 7 ngày
         }
 
-        // Tìm số ngày có phút gọi nhiều nhất ? , số phút gọi ít nhất ? , trung bình phút gọi cả tuần
+
         int []  listTotalCallSeconds = new int[dayOfWeeks.length];            // danh sách tổng giấy gọi mỗi ngày của một  tuần
         int i=0;
         for(List<CallObject> callListObjectForADay : list){

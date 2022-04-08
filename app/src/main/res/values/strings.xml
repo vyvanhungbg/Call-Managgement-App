@@ -38,6 +38,7 @@
     <string name="title_textview_coming_call">Gọi đến</string>
     <string name="title_textview_outgoing_call">Gọi đi</string>
     <string name="toast_text_view_combined_chart_on_touch">Có %d cuộc gọi vào %s</string>
+    <string name="toast_text_view_horizontal_bar_chart_on_touch">%s bạn đã gọi với thời lượng %s</string>
     <!--    // call statistic presenter-->
     <string name="day_of_week">thứ %s</string>
     <string name="sunday">chủ nhật</string>

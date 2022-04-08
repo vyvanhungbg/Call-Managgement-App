@@ -3,4 +3,6 @@
     <include domain = "file" path="string"/>
     <include domain = "external" path="string"/>
 
+
 </full-backup-content>
+

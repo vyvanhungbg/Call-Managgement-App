@@ -61,6 +61,12 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
     private static final String TAG = CallStatisticsFragment.class.getSimpleName();
     //FragmentCallStatisticsBinding binding;
+    final static int FLAG_SECOND = 0;
+    final static int FLAG_MIN = 1;
+    final static int FLAG_HOURS = 2;
+
+    static int FLAG_FORMAT = FLAG_SECOND;
+
     private CallStatisticsPresenter presenter;
     ColorStateList def;
     TextView item1;
@@ -101,7 +107,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         // Inflate the layout for this fragment
 
         View view = inflater.inflate(R.layout.fragment_call_statistics, container, false);
-        init();
+       // init();
         item1 = view.findViewById(R.id.item1);
         item2 = view.findViewById(R.id.item2);
         item3 = view.findViewById(R.id.item3);
@@ -131,9 +137,17 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
 
         presenter.getTimeLine(mRealm,CallStatisticsPresenter.NOW_TIME_LINE,FLAG_FILTER_CALL);
-
+        setOnChangedDataToUpdateView();
         setOnClickButtonNextOrPrevious();
 
+    }
+
+    private void setOnChangedDataToUpdateView() {
+        try {
+            mRealm.addChangeListener(realm ->  presenter.getTimeLine(mRealm,CallStatisticsPresenter.NOW_TIME_LINE,FLAG_FILTER_CALL));
+        }catch (Exception e){
+            LogE(TAG,e.getMessage());
+        }
     }
 
     public void init(){
@@ -165,6 +179,7 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         horizontalBarChart.setPinchZoom(false);
 
         horizontalBarChart.setDrawGridBackground(false);
+        horizontalBarChart.setDoubleTapToZoomEnabled(false);
 
         XAxis xl = horizontalBarChart.getXAxis();
         xl.setPosition(XAxis.XAxisPosition.BOTTOM);
@@ -175,11 +190,6 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
 
 
-        List<String> label= new ArrayList<>();
-        label.add("Label 1 :");
-        label.add("Label 2 :");
-        label.add("Label 3 :");
-        xl.setValueFormatter(new IndexAxisValueFormatter(label));
 
         YAxis yl = horizontalBarChart.getAxisLeft();
         //yl.setTypeface(tfLight);
@@ -195,8 +205,13 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         yr.setAxisMinimum(0f); // this replaces setStartAtZero(true)
 //        yr.setInverted(true);
 
+
+
+
+        // set vị trí nhãn đại lượng
         Legend l = horizontalBarChart.getLegend();
         l.setVerticalAlignment(Legend.LegendVerticalAlignment.BOTTOM);
+
         l.setHorizontalAlignment(Legend.LegendHorizontalAlignment.LEFT);
         l.setOrientation(Legend.LegendOrientation.HORIZONTAL);
         l.setDrawInside(false);
@@ -211,17 +226,22 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
 
     }
 
+    public float formatTime(float time){
+        if(FLAG_FORMAT == FLAG_HOURS) return  time/3600;
+        if(FLAG_FORMAT == FLAG_MIN) return  time/60;
+        return time;
+    }
+
+    public String formatLabelOfColumnTime(){
+        if(FLAG_FORMAT == FLAG_HOURS) return  "Giờ";
+        if(FLAG_FORMAT == FLAG_MIN) return  "Phút";
+        return "Giây";
+    }
+
     private void setData(int[] listTotalCallSeconds) {
 
-        float barWidth = 1f;
-        float spaceForBar = 3f;
+        float barWidth = 0.8f;
         ArrayList<BarEntry> values = new ArrayList<>();
-
-       /* for (int i = 0; i < count; i++) {
-            float val = (float) (Math.random() * range);
-            values.add(new BarEntry(i * spaceForBar, val,
-                    getResources().getDrawable(R.drawable.ic_favourit_stroke)));
-        }*/
         int nameOfDayMax = 0;
         int max = listTotalCallSeconds[nameOfDayMax];
         int sum = 0;
@@ -233,37 +253,77 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
             sum+= listTotalCallSeconds[i];
         }
 
-        values.add(new BarEntry(0, max));
-        values.add(new BarEntry(1, sum));
-        values.add(new BarEntry(2,  (sum*1.0F/listTotalCallSeconds.length)));
+        float aver = (sum*1.0F/listTotalCallSeconds.length);  // tính toán xem nên hiển thị theo đại lượng nào
+        if(aver /3600 >1)
+            FLAG_FORMAT = FLAG_HOURS;
+        if(aver/60 >1)
+            FLAG_FORMAT = FLAG_MIN;
 
-        BarDataSet set1;
+        //set nhãn
+        final List<String> labelDayOfWeek = Arrays.asList(getResources().getStringArray(R.array.title_name_day_of_week));
+        XAxis xl = horizontalBarChart.getXAxis();
+        List<String> label= new ArrayList<>();
+        label.add("Gọi nhiều nhất "+labelDayOfWeek.get(nameOfDayMax)+" :");
+        label.add("Tổng "+formatLabelOfColumnTime()+"  tuần này :");
+        label.add("Trung bình mỗi ngày :");
+        xl.setValueFormatter(new IndexAxisValueFormatter(label));
 
+
+        horizontalBarChart.setOnChartValueSelectedListener(new OnChartValueSelectedListener() {
+            @Override
+            public void onValueSelected(Entry e, Highlight h) {
+                Toast.makeText(getContext(),
+                        getString(R.string.toast_text_view_horizontal_bar_chart_on_touch,
+                                label.get((int) h.getX()),
+                        String.format("%.1f"+formatLabelOfColumnTime(),e.getY()))
+                        ,
+                        Toast.LENGTH_LONG).show();
+            }
+
+            @Override
+            public void onNothingSelected() {
+
+            }
+        });
+
+
+        // set giá trị cho mỗi cột
+        values.add(new BarEntry(0, formatTime(max)));
+        values.add(new BarEntry(1, formatTime(sum)));
+        values.add(new BarEntry(2,  formatTime((sum*1.0F/listTotalCallSeconds.length))));
+
+        BarDataSet mSet;
+
+        List<Integer> colorsOfColumn = new ArrayList();
+        colorsOfColumn.add(Color.BLUE);
+        colorsOfColumn.add(Color.RED);
+        colorsOfColumn.add(Color.GREEN);
 
         if (horizontalBarChart.getData() != null &&
                 horizontalBarChart.getData().getDataSetCount() > 0) {
-            set1 = (BarDataSet) horizontalBarChart.getData().getDataSetByIndex(0);
-            set1.setValues(values);
+            mSet = (BarDataSet) horizontalBarChart.getData().getDataSetByIndex(0);
+            mSet.setValues(values);
             horizontalBarChart.getData().notifyDataChanged();
             horizontalBarChart.notifyDataSetChanged();
         } else {
-            set1 = new BarDataSet(values, "Seconds");
+            mSet = new BarDataSet(values, formatLabelOfColumnTime()); // set nhãn cột
 
-            set1.setDrawIcons(false);
+            mSet.setDrawIcons(false);
 
             ArrayList<IBarDataSet> dataSets = new ArrayList<>();
-            dataSets.add(set1);
+            dataSets.add(mSet);
 
             BarData data = new BarData(dataSets);
             data.setValueTextColor(Color.RED);
-            data.setValueTextSize(10f);
+            data.setValueTextSize(12f);
             data.setBarWidth(barWidth);
             horizontalBarChart.setData(data);
         }
 
        // horizontalBarChart.set
 
-        set1.setColors(Color.RED);
+        mSet.setColors(colorsOfColumn);
+
 
     }
 
@@ -435,4 +495,21 @@ public class CallStatisticsFragment extends Fragment implements View.OnClickList
         pieChart.animateY(1400, Easing.EaseInOutQuad);
     }
 
+    @Override
+    public void onDestroy() {
+        if (mRealm != null) {
+            mRealm.removeAllChangeListeners ();
+            if (!mRealm.isClosed ()) {
+                try {
+                    mRealm.close ();
+                } catch (Exception e) {
+                    LogE (TAG, e.getMessage ());
+                    LogE (TAG, e.toString ());
+                    e.printStackTrace ();
+                }
+            }
+            mRealm = null;
+        }
+        super.onDestroy();
+    }
 }
