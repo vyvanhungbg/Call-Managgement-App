@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item
+        android:id="@+id/menu_setting_auto_backup"
+        android:title="@string/auto_backup" />
+    <item
+        android:id="@+id/menu_setting_manual_backup"
+        android:title="@string/manual_backup" >
+        <menu>
+            <item
+                android:id="@+id/menu_setting_manual_backup_internal_memory"
+                android:title="Internal(vị trí lưu)" />
+            <item
+                android:id="@+id/menu_setting_manual_backup_external_memory"
+                android:title="External(vị trí lưu)" />
+        </menu>
+    </item>
+
+</menu>

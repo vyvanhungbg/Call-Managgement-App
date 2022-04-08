@@ -68,9 +68,7 @@ public class MainActivity extends AppCompatActivity {
 
         customFragmentManager();
         onClickNavigationBar();
-        BackupDataUtil backupDataUtil = new BackupDataUtil();
-        //backupDataUtil.shareFile(getApplicationContext());
-       
+
 
     }
 

@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 
 <androidx.preference.PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    >
-
-
+    xmlns:android="http://schemas.android.com/apk/res/android">
 
     <ListPreference
         app:entries="@array/records_output_location_entries"

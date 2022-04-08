@@ -58,7 +58,7 @@ public class BackupDataUtil {
         context.startActivity(Intent.createChooser(intent, "Export realm data"));
     }
 
-    public void exportFileAudio(Context context){
+    public static void exportFileAudio(Context context){
         File file = new File(AppConstants.sExternalFilesDirPathMemory);
         File fileInternal = new File(AppConstants.sFilesDirPathMemory);
         Log.e("Path external",file.getPath());
@@ -73,7 +73,7 @@ public class BackupDataUtil {
         intent.putExtra(Intent.EXTRA_STREAM, (Parcelable) folder.get(0));
         intent.setType("text/plain");
         context.startActivity(intent);*/
-        shareMultiple(Arrays.asList(Objects.requireNonNull(fileInternal.listFiles())),context);
+        shareMultiple(Arrays.asList(Objects.requireNonNull(file.listFiles())),context);
     }
 
     public static void shareMultiple(List<File> files, Context context){
@@ -88,17 +88,20 @@ public class BackupDataUtil {
         context.startActivity(Intent.createChooser(intent, "Share"));
     }
 
-    public void shareFile(Context context){
-        File fileInternal = new File(AppConstants.sFilesDirPathMemory);
-        Uri contentUri = FileProvider.getUriForFile(context, AUTHORITY, fileInternal);
+    public static void shareFile(Context context,String path){  // path or
+        //File fileExternal = new File(AppConstants.sExternalFilesDirPathMemory);
+       // File fileInternal = new File(AppConstants.sFilesDirPathMemory);
+        File folder = new File(path);
 
-        Log.e("Path external",contentUri.getPath());
+        ArrayList<Uri> uris = new ArrayList<>();
+        for(File file: Objects.requireNonNull(folder.listFiles())){
+            uris.add(FileProvider.getUriForFile(context, AUTHORITY, file));
+        }
 
-
-        Intent sharingIntent = new Intent(Intent.ACTION_SEND);
-        sharingIntent.setType("plain/text");
-        sharingIntent.putExtra(Intent.EXTRA_STREAM, contentUri);
-        context.startActivity(Intent.createChooser(sharingIntent, ""));
+        final Intent intent = new Intent(Intent.ACTION_SEND_MULTIPLE);
+        intent.setType("*/*");
+        intent.putParcelableArrayListExtra(Intent.EXTRA_STREAM, uris);
+        context.startActivity(Intent.createChooser(intent, "Share"));
     }
    /* E/Path external: /storage/emulated/0/Android/data/com.franky.callmanagement/files
     E/Path internal: /data/user/0/com.franky.callmanagement/files*/

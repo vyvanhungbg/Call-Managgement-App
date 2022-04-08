@@ -1,2 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<files-path name="audio_path" path="files/"/>
+<paths>
+    <files-path name="files" path="../files/"/>
+    <external-files-path name="external_files" path="../files/" />
+</paths>
