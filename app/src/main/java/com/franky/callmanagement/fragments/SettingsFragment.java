@@ -1,5 +1,6 @@
 package com.franky.callmanagement.fragments;
 
+import android.app.backup.BackupManager;
 import android.content.Context;
 import android.os.Build;
 import android.os.Bundle;
@@ -88,7 +89,11 @@ public class SettingsFragment extends Fragment  {
     private boolean menuItemClicked(MenuItem item){
         switch (item.getItemId()){
             case R.id.menu_setting_auto_backup:
-                Toast.makeText(getContext(),"Auto backup",Toast.LENGTH_LONG).show();break;
+                Toast.makeText(getContext(),"Dữ liệu của bạn đã được lên lịch sao lưu",Toast.LENGTH_LONG).show();
+                BackupManager backupManager = new BackupManager(getContext());
+                backupManager.dataChanged();
+               // backupManager.requestRestore();
+                break;
             case R.id.menu_setting_manual_backup:
                 Toast.makeText(getContext(),"Chọn vị trí tệp lưu",Toast.LENGTH_LONG).show();break;
             case  R.id.menu_setting_manual_backup_external_memory:
@@ -98,4 +103,6 @@ public class SettingsFragment extends Fragment  {
         }
         return true;
     }
+
+
 }

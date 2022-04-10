@@ -6,6 +6,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.app.ActivityCompat;
 import androidx.core.app.NotificationCompat;
 import androidx.core.app.NotificationManagerCompat;
+import androidx.core.content.ContextCompat;
 import androidx.databinding.DataBindingUtil;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
@@ -17,6 +18,8 @@ import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.content.pm.ApplicationInfo;
+import android.content.pm.PackageInfo;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -78,7 +81,52 @@ public class MainActivity extends AppCompatActivity {
         customFragmentManager();
         onClickNavigationBar();
        // BackupDataUtil.shareFile(getApplicationContext(),AppConstants.sFilesDirPathMemory);
+        PackageInfo packageInfo = null;
+        try {
+            packageInfo = getPackageManager().getPackageInfo(getPackageName(), 0);
+        } catch (PackageManager.NameNotFoundException e) {
+            e.printStackTrace();
+        }
+       /* if ((packageInfo.applicationInfo.flags & ApplicationInfo.FLAG_ALLOW_BACKUP) != 0) {
+            // it is enabled
+            LogE(TAG, "ENABLE _ BACKUP");
+        } else {
+            // it is disabled
+            LogE(TAG, "DISABLE _ BACKUP");
+        }*/
 
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALL_LOG},101);
+           // String tmp = intent.getStringExtra (TelephonyManager.EXTRA_INCOMING_NUMBER);
+            LogE (TAG, "-------phoneStateIncomingNumber "  );
+        }else {
+            LogE (TAG, "-------No Permistion READ CALL LOG 1" );
+
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG) != PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALL_LOG},101);
+            // String tmp = intent.getStringExtra (TelephonyManager.EXTRA_INCOMING_NUMBER);
+            LogE (TAG, "Reqest permiss "  );
+        }else {
+            LogE (TAG, "-------No Reqest Permistion READ CALL LOG " );
+
+        }
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED ) {
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_CALL_LOG},101);
+            // String tmp = intent.getStringExtra (TelephonyManager.EXTRA_INCOMING_NUMBER);
+            LogE (TAG, "-------Suucess per mis phoneStateIncomingNumber "  );
+        }else {
+            LogE (TAG, "-------No Permistion READ CALL LOG " );
+
+        }
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) != PackageManager.PERMISSION_GRANTED) {
+
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.RECORD_AUDIO}, 102);
+
+        }
     }
 
 

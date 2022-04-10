@@ -285,7 +285,7 @@ public class AllCallFragment extends Fragment implements IAllCallListener {
                         layoutTimeLine.get(isDaySelected).setBackground(null);
                         view.setBackground(ContextCompat.getDrawable(view.getContext(),R.drawable.custom_time_line_selected));
                         isDaySelected = positionSelect;
-                    Log.e("Selected day", isDaySelected+"");
+                   // Log.e("Selected day", isDaySelected+"");
                     presenter.getCallObjectRealmObject(mRealm);
 
                 }

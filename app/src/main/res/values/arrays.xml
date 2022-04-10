@@ -23,8 +23,8 @@
     <!-- //// -->
 
     <string-array name="preferred_audio_source_entries">
-        <item>VOICE_CALL (Default)</item>
-        <item>VOICE_COMMUNICATION</item>
+<!--        <item>VOICE_CALL</item>  đã bị thu hồi , chỉ dành cho ứng dụng hệ thống -->
+        <item>VOICE_COMMUNICATION (Default)</item>
         <item>VOICE_RECOGNITION</item>
         <!--<item>VOICE_UPLINK</item>-->
         <!--<item>VOICE_DOWNLINK</item>-->

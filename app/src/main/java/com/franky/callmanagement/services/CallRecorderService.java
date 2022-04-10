@@ -28,9 +28,11 @@ import android.telephony.TelephonyManager;
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
 import androidx.annotation.RequiresPermission;
+import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
 import com.franky.callmanagement.R;
+import com.franky.callmanagement.activities.MainActivity;
 import com.franky.callmanagement.config.CallRecorderConfig;
 import com.franky.callmanagement.env.AppConfig;
 import com.franky.callmanagement.env.AppConstants;
@@ -81,6 +83,42 @@ public class CallRecorderService extends Service {
             LogE (TAG, e.toString ());
             e.printStackTrace ();
         }
+
+        createNotification();
+        checkPermission();
+    }
+
+    private void checkPermission() {
+        if (ContextCompat.checkSelfPermission (this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                telephonyManager = (TelephonyManager) getSystemService (Context.TELEPHONY_SERVICE);
+            } catch (Exception e) {
+                LogE (TAG, e.getMessage ());
+                LogE (TAG, e.toString ());
+                e.printStackTrace ();
+            }
+        }
+        if (ContextCompat.checkSelfPermission (this, Manifest.permission.VIBRATE) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                vibrator = (Vibrator) getSystemService (Context.VIBRATOR_SERVICE);
+            } catch (Exception e) {
+                LogE (TAG, e.getMessage ());
+                LogE (TAG, e.toString ());
+                e.printStackTrace ();
+            }
+        }
+        if (ContextCompat.checkSelfPermission (this, Manifest.permission.MODIFY_AUDIO_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
+            try {
+                audioManager = (AudioManager) getSystemService (Context.AUDIO_SERVICE);
+            } catch (Exception e) {
+                LogE (TAG, e.getMessage ());
+                LogE (TAG, e.toString ());
+                e.printStackTrace ();
+            }
+        }
+    }
+
+    private void createNotification() {
         try {
             notificationManager = (NotificationManager) getSystemService (Context.NOTIFICATION_SERVICE);
         } catch (Exception e) {
@@ -143,33 +181,6 @@ public class CallRecorderService extends Service {
                 }
             }
         }
-        if (ContextCompat.checkSelfPermission (this, Manifest.permission.READ_PHONE_STATE) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                telephonyManager = (TelephonyManager) getSystemService (Context.TELEPHONY_SERVICE);
-            } catch (Exception e) {
-                LogE (TAG, e.getMessage ());
-                LogE (TAG, e.toString ());
-                e.printStackTrace ();
-            }
-        }
-        if (ContextCompat.checkSelfPermission (this, Manifest.permission.VIBRATE) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                vibrator = (Vibrator) getSystemService (Context.VIBRATOR_SERVICE);
-            } catch (Exception e) {
-                LogE (TAG, e.getMessage ());
-                LogE (TAG, e.toString ());
-                e.printStackTrace ();
-            }
-        }
-        if (ContextCompat.checkSelfPermission (this, Manifest.permission.MODIFY_AUDIO_SETTINGS) == PackageManager.PERMISSION_GRANTED) {
-            try {
-                audioManager = (AudioManager) getSystemService (Context.AUDIO_SERVICE);
-            } catch (Exception e) {
-                LogE (TAG, e.getMessage ());
-                LogE (TAG, e.toString ());
-                e.printStackTrace ();
-            }
-        }
     }
 
     @Nullable
@@ -204,6 +215,16 @@ public class CallRecorderService extends Service {
 
 
             // Kiểm tra số điện thoại gọi đến phải thuộc danh sách yêu thích không
+           /* if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_CALL_LOG) == PackageManager.PERMISSION_GRANTED ) {
+
+                String tmp = intent.getStringExtra (TelephonyManager.EXTRA_INCOMING_NUMBER);
+                LogE (TAG, "-------phoneStateIncomingNumber " + tmp);
+            }else {
+                LogE (TAG, "-------No Permistion READ CALL LOG " );
+
+            }
+*/
+
             if (intent.hasExtra (TelephonyManager.EXTRA_INCOMING_NUMBER)) {
                 phoneStateIncomingNumber = intent.getStringExtra (TelephonyManager.EXTRA_INCOMING_NUMBER);
                 LogE (TAG, "-------phoneStateIncomingNumber " + phoneStateIncomingNumber);
@@ -236,6 +257,8 @@ public class CallRecorderService extends Service {
                 if (!phoneStateIncomingNumber.trim ().isEmpty ()) {
                     LogE (TAG, "Phone state incoming number: " + phoneStateIncomingNumber);
                 }
+            }else {
+                LogE(TAG,"No EXTRA_INCOMING_NUMBER key");
             }
 
 
@@ -364,62 +387,72 @@ public class CallRecorderService extends Service {
             }
             return;
         }
-        mediaRecorder.setOnInfoListener (onInfoListener);
-        mediaRecorder.setOnErrorListener (onErrorListener);
-        mediaRecorder.setAudioSource (audioSource);
-        mediaRecorder.setOutputFormat (outputFormat);
-        mediaRecorder.setAudioEncoder (audioEncoder);
-        mediaRecorder.setOutputFile (outputFilePath);
-        boolean prepare = prepare ();
-        boolean start = start ();
-        boolean succeed = prepare && start;
-        if (!succeed) {
-            if (!prepare) {
-                LogI (TAG, "Media recorder (telephony) has prepare exception");
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.RECORD_AUDIO) == PackageManager.PERMISSION_GRANTED) {
+
+            mediaRecorder.setOnInfoListener (onInfoListener);
+            mediaRecorder.setOnErrorListener (onErrorListener);
+            mediaRecorder.setAudioSource (audioSource);
+            mediaRecorder.setOutputFormat (outputFormat);
+            mediaRecorder.setAudioEncoder (audioEncoder);
+            mediaRecorder.setOutputFile (outputFilePath);
+            boolean prepare = prepare ();
+            boolean start = start ();
+            boolean succeed = prepare && start;
+            if (!succeed) {
+                if (!prepare) {
+                    LogI (TAG, "Media recorder (telephony) has prepare exception");
+                }
+                if (!start) {
+                    LogI (TAG, "Media recorder (telephony) has start exception");
+                }
+
+                // Nếu audiosource không thỏa mãn thì tự đồng tìm audiosouces thỏa mãn ghi âm được
+                for (int otherAudioSource : CallRecorderConfig.getAudioSources ()) {
+                    if (otherAudioSource == audioSource) {
+                        LogE(TAG,"Audio success : "+otherAudioSource);
+                        continue;
+                    }
+                    audioSource = otherAudioSource;
+                    reset ();
+                    mediaRecorder.setOnInfoListener (onInfoListener);
+                    mediaRecorder.setOnErrorListener (onErrorListener);
+                    mediaRecorder.setAudioSource (audioSource);
+                    mediaRecorder.setOutputFormat (outputFormat);
+                    mediaRecorder.setAudioEncoder (audioEncoder);
+                    mediaRecorder.setOutputFile (outputFilePath);
+                    boolean otherPrepare = prepare();
+                    boolean otherStart = start();
+                    if (otherPrepare && otherStart) {
+                        succeed = true;
+                        break;
+                    } else {
+                        if (!otherPrepare) {
+                            LogI (TAG, "Media recorder (telephony) has other prepare exception");
+                        }
+                        if (!otherStart) {
+                            LogI (TAG, "Media recorder (telephony) has other start exception");
+                        }
+                    }
+                }
             }
-            if (!start) {
-                LogI (TAG, "Media recorder (telephony) has start exception");
+            LogE(TAG,"Audio souces final = "+audioSource);
+            if (!succeed) {
+                try {
+                    LogE (TAG, "stopSelf() 4");
+                    stopSelf ();
+                } catch (Exception e) {
+                    LogE (TAG, e.getMessage ());
+                    LogE (TAG, e.toString ());
+                    e.printStackTrace ();
+                }
+                return;
             }
 
-            // Nếu audiosource không thỏa mãn thì tự đồng tìm audiosouces thỏa mãn ghi âm được
-            for (int otherAudioSource : CallRecorderConfig.getAudioSources ()) {
-                if (otherAudioSource == audioSource) {
-                    continue;
-                }
-                audioSource = otherAudioSource;
-                reset ();
-                mediaRecorder.setOnInfoListener (onInfoListener);
-                mediaRecorder.setOnErrorListener (onErrorListener);
-                mediaRecorder.setAudioSource (audioSource);
-                mediaRecorder.setOutputFormat (outputFormat);
-                mediaRecorder.setAudioEncoder (audioEncoder);
-                mediaRecorder.setOutputFile (outputFilePath);
-                boolean otherPrepare = prepare();
-                boolean otherStart = start();
-                if (otherPrepare && otherStart) {
-                    succeed = true;
-                    break;
-                } else {
-                    if (!otherPrepare) {
-                        LogI (TAG, "Media recorder (telephony) has other prepare exception");
-                    }
-                    if (!otherStart) {
-                        LogI (TAG, "Media recorder (telephony) has other start exception");
-                    }
-                }
-            }
         }
-        if (!succeed) {
-            try {
-                LogE (TAG, "stopSelf() 4");
-                stopSelf ();
-            } catch (Exception e) {
-                LogE (TAG, e.getMessage ());
-                LogE (TAG, e.toString ());
-                e.printStackTrace ();
-            }
-            return;
-        }
+
+
+
         if (vibrate) {
             if (ContextCompat.checkSelfPermission (this, Manifest.permission.VIBRATE) == PackageManager.PERMISSION_GRANTED) {
                 if (vibrator != null) {
@@ -484,36 +517,68 @@ public class CallRecorderService extends Service {
             LogE (TAG, e.toString ());
             e.printStackTrace ();
         }
-        if (telephonyManager != null) {
+        if (telephonyManager != null) {  // phải check từng quyền vì có thể through Sercurity Exception do android >9 , 11
             try {
-//                simSerialNumber = Settings.Secure.getString(getApplicationContext().getContentResolver(),
-//                        Settings.Secure.ANDROID_ID);
                 simSerialNumber = telephonyManager.getSimSerialNumber();
                 LogE (TAG, "SIM Serial Number: " + simSerialNumber);
-                simOperator = telephonyManager.getSimOperator ();
-                simOperatorName = telephonyManager.getSimOperatorName ();
-                simCountryIso = telephonyManager.getSimCountryIso ();
-                LogE (TAG, "SIM Operator: " + simOperator);
-                LogE (TAG, "SIM Operator Name: " + simOperatorName);
-                LogE (TAG, "SIM Country ISO: " + simCountryIso);
-                networkOperator = telephonyManager.getNetworkOperator ();
-                networkOperatorName = telephonyManager.getNetworkOperatorName ();
-                networkCountryIso = telephonyManager.getNetworkCountryIso ();
             } catch (Exception e) {
                 LogE (TAG, e.getMessage ());
-                LogE (TAG, e.toString ());
                 e.printStackTrace ();
-
                 /// Android 11 bị lỗi chức năng này
-
                 simSerialNumber = Settings.Secure.getString(getApplicationContext().getContentResolver(),
                         Settings.Secure.ANDROID_ID);
-                simOperator = "-";
-                simOperatorName = "-";
-                simCountryIso = "-";
-                networkOperator = "-";
-                networkOperatorName = "-";
-                networkCountryIso = "-";
+            }
+            try {
+                simOperator = telephonyManager.getSimOperator ();
+            }catch (Exception e){
+                LogE (TAG, e.getMessage ());
+                e.printStackTrace ();
+                simOperator = "";
+            }
+
+            try {
+                simOperatorName = telephonyManager.getSimOperatorName ();
+                LogE (TAG, "SIM Operator Name: " + simOperatorName);
+            }catch (Exception e){
+                LogE (TAG, e.getMessage ());
+                e.printStackTrace ();
+                simOperatorName = "";
+            }
+
+            try {
+                simCountryIso = telephonyManager.getSimCountryIso ();
+                LogE (TAG, "SIM Country ISO: " + simCountryIso);
+            }catch (Exception e){
+                LogE (TAG, e.getMessage ());
+                e.printStackTrace ();
+                simCountryIso = "";
+            }
+
+            try {
+                networkOperator = telephonyManager.getNetworkOperator ();
+                LogE (TAG, "networkOperator: " + networkOperator);
+            }catch (Exception e){
+                LogE (TAG, e.getMessage ());
+                e.printStackTrace ();
+                networkOperator = "";
+            }
+
+            try {
+                networkOperatorName = telephonyManager.getNetworkOperatorName ();
+                LogE (TAG, "networkOperatorName: " + networkOperatorName);
+            }catch (Exception e){
+                LogE (TAG, e.getMessage ());
+                e.printStackTrace ();
+                networkOperatorName = "";
+            }
+
+            try {
+                networkCountryIso = telephonyManager.getNetworkCountryIso ();
+                LogE (TAG, "networkCountryIso: " + networkCountryIso);
+            }catch (Exception e){
+                LogE (TAG, e.getMessage ());
+                e.printStackTrace ();
+                networkCountryIso = "";
             }
         }
 

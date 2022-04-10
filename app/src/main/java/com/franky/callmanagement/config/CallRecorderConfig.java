@@ -18,7 +18,7 @@ public class CallRecorderConfig {
 
     public static List<Integer> getAudioSources () {
         List<Integer> list = new ArrayList<> ();
-        list.add (MediaRecorder.AudioSource.VOICE_CALL);
+//        list.add (MediaRecorder.AudioSource.VOICE_CALL); đã bị thu hồi , chỉ dành cho ứng dụng hệ thống
         list.add (MediaRecorder.AudioSource.VOICE_COMMUNICATION);
         list.add (MediaRecorder.AudioSource.VOICE_RECOGNITION);
         list.add (MediaRecorder.AudioSource.MIC);

@@ -39,7 +39,7 @@
     <ListPreference
         app:entries="@array/preferred_audio_source_entries"
         app:entryValues="@array/preferred_audio_source_entry_values"
-        app:defaultValue="4"
+        app:defaultValue="7"
         app:key="audio_source"
         app:title="@string/preferred_audio_source"
         app:useSimpleSummaryProvider="true" />

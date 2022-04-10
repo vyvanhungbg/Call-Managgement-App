@@ -243,7 +243,11 @@ public class CallActivity extends AppCompatActivity implements ICallActivityList
     private Bitmap getImageInfoFromContacts(CallObject callObject) {
         String phoneNumber = callObject.getPhoneNumber();
         Bitmap imageBitmap = null;
-        if (phoneNumber == null && phoneNumber.trim().isEmpty()){
+        if (phoneNumber == null ){
+            return null;
+
+        }
+        if(phoneNumber.trim().isEmpty()){  // check trim() bị lỗi khi phone == null
             return null;
         }
         try {

@@ -135,5 +135,5 @@
     <!--    //format-->
     <string name="format_duration">%d phút, %d giây</string>
     <string name="auto_backup">Sao lưu tự động</string>
-    <string name="manual_backup">Sao lưu thủ công</string>
+    <string name="manual_backup">Xuất file </string>
 </resources>
